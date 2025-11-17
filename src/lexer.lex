@@ -6,7 +6,7 @@
 %option noinput
 %%
 
-[_a-za-z0-9]+   return IDENT;
+[_a-zA-Z][_a-za-z0-9]*   return IDENT;
 [a-zA-Z]+       return CHARACTER;
 [0-9]+          return NUM;
 [+-]            return ADDSUB;
