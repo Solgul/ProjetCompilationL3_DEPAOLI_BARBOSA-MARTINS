@@ -18,13 +18,13 @@
 "if"                     return IF;
 "else"                   return ELSE;
 "return"                 return RETURN;
-"void"                   return VOID
-[({});,=]              return yytext[0];
+"void"                   return VOID;
+[({});,=]                return yytext[0];
 
 "//".* ;
 "/*" BEGIN COMM;
 
 
-<COMM> "*/" BEGIN INITIAL;
+<COMM>"*/" BEGIN INITIAL;
 <COMM>[.\n] ;
 %%
