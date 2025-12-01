@@ -9,8 +9,9 @@ int max(int a, int b){ //valeur max entre a et b en int
 }
 
 int main(void){
-  int a = 0;
-  int b = 1 + 3;
-  int c = max(a, b);
+  int a; int b; int c;
+  a = 0;
+  b = 1 + 3;
+  c = max(a, b);
   return 1;
 }
