@@ -1,3 +1,4 @@
+//test ident, if() else, return exp;, ==, addsub, ||, ORDER, affectation, creation, NUM 
 /*
 Je suis un programme de C qui doit archer, je lance mon int main(void){} quand on m'appelle
 */
