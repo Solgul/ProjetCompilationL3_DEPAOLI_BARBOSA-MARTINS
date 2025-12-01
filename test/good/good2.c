@@ -1,3 +1,4 @@
+//test while(), if(), return;, char, 
 void affiche_le_premier_C(char* tank){
   int i; i = 0; char assaut;
   while((assaut = tank[i]) != EOF){
