@@ -19,7 +19,7 @@
 "else"                   return ELSE;
 "return"                 return RETURN;
 "void"                   return VOID
-[[({})];,=]              return yytext[0];
+[[({})\];,=]              return yytext[0];
 
 "//".* ;
 "/*" BEGIN COMM;
