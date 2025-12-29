@@ -10,6 +10,8 @@
 [*/%]                    return DIVSTAR;
 [{==}{!=}]               return EQ;
 [<{<=}{>=}>]             return ORDER;
+"int"|"char"             return TYPE;
+"struct"                 return STRUCT;
 "||"                     return OR;
 "&&"                     return AND;
 "if"                     return IF;
