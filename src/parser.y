@@ -1,14 +1,17 @@
 %%
-Structure : STRUCT ident '{' DeclVars '}'';'
+DeclStruct : STRUCT ident '{' DeclVars '}'';'
     ;
-Prog:  DeclVars DeclFoncts
+DeclStart : DeclVars DeclStart
+    | DeclStruct DeclStart
+    |
+    ; 
+Prog:  DeclStart DeclFoncts
     ;
 Type : TYPE
     | STRUCT IDENT
     ;
 DeclVars:
        DeclVars Type Declarateurs ';'
-    |
     ;
 Declarateurs:
        Declarateurs ',' IDENT
@@ -33,7 +36,7 @@ ListTypVar:
        ListTypVar ',' Type IDENT
     |  Type IDENT
     ;
-Corps: '{' DeclVars SuiteInstr '}'
+Corps: '{' DeclStart SuiteInstr '}'
     ;
 SuiteInstr:
        SuiteInstr Instr
