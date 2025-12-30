@@ -1,0 +1,15 @@
+/* Struct en paramètre et variable locale */
+struct Box {
+    int w, h;
+};
+
+int area(struct Box b){
+    return b.w * b.h;
+}
+
+int main(void){
+    struct Box myBox;
+    myBox.w = 5;
+    myBox.h = 5;
+    return area(myBox);
+}

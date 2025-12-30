@@ -1,0 +1,2 @@
+struct Vide { }; /* Erreur : doit avoir au moins un champ */
+int main(void){ return 0; }

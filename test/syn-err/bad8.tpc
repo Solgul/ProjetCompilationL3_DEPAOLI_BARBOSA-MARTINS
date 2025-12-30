@@ -1,0 +1,12 @@
+int fonc(void){
+    return 0;
+}
+
+/* ERREUR : Définition globale après une fonction */
+struct Invalid {
+    int a;
+};
+
+int main(void){
+    return 0;
+}

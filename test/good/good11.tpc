@@ -1,0 +1,10 @@
+/* Commentaire sur
+   plusieurs lignes */
+// Commentaire ligne fin
+int main(void) {
+    char c;
+    c = '\n';    /* Test de l'échappement \n [cite: 23] */
+    c = '\t';    /* Test de \t */
+    c = '\\';    /* Test de l'anti-slash */
+    return 0;
+}
