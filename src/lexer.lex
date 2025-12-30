@@ -36,6 +36,7 @@ int lineno = 1;
 "return"                 return RETURN;
 "while"                  return WHILE;
 "int"|"char"             return TYPE;
+"void"                   return VOID;
 
         /* ===================== */
         /* OPÉRATEURS            */

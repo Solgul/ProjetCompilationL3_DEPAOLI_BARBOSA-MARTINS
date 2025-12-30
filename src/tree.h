@@ -2,9 +2,10 @@
 
 typedef enum {
   Prog,
-  GlobalDecl,
   GlobalDecls,
+  GlobalDecl,
   DeclStruct,
+  ListDeclVars,
   DeclStart,
   DeclStarts,
   Type,
