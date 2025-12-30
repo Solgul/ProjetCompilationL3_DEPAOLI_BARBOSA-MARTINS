@@ -29,7 +29,7 @@ int lineno = 1;
 <COMM>.|\n               ;
 
         /* ===================== */
-        /* MOTS-CLÉS (minuscules obligatoires) */
+        /* MOTS-CLÉS             */
         /* ===================== */
 "if"                     return IF;
 "else"                   return ELSE;

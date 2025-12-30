@@ -22,13 +22,13 @@ $(EXEC) : $(OBJ)/$(LEXER).o $(OBJ)/$(PARSER).o $(OBJ)/tree.o
 $(OBJ)/tree.o : $(SOURCE)/tree.c $(SOURCE)/tree.h
 
 $(OBJ)/$(PARSER).o: $(OBJ)/$(PARSER).c $(SOURCE)/tree.h
-$(OBJ)/$(LEXER).o: $(OBJ)/$(LEXER).c $(SOURCE)/tree.h
+$(OBJ)/$(LEXER).o: $(OBJ)/$(LEXER).c $(OBJ)/$(PARSER).h 
 
 $(OBJ)/%.o : $(SOURCE)/%.c
 	@mkdir -p $(OBJ)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(OBJ)/$(LEXER).c : $(SOURCE)/$(LEXER).lex $(OBJ)/$(PARSER).h $(SOURCE)/tree.h
+$(OBJ)/$(LEXER).c : $(SOURCE)/$(LEXER).lex $(OBJ)/$(PARSER).h
 	@mkdir -p $(OBJ)
 	$(LEX) -o $@ $<
 

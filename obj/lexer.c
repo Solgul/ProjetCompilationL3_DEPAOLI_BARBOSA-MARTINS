@@ -812,7 +812,7 @@ YY_RULE_SETUP
 ;
 	YY_BREAK
 /* ===================== */
-/* MOTS-CLÉS (minuscules obligatoires) */
+/* MOTS-CLÉS             */
 /* ===================== */
 case 7:
 YY_RULE_SETUP
