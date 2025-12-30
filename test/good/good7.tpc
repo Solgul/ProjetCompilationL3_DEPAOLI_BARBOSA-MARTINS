@@ -1,8 +1,13 @@
-void rien(void) {
-    return; /* Test du return sans expression [cite: 17] */
-}
-
+/* Test : Priorité du Modulo (%) par rapport à l'addition (+) */
 int main(void) {
-    rien(); /* Test appel sans arguments */
+    int res;
+    
+    /* Doit être analysé comme 10 + (10 % 3) = 10 + 1 = 11 */
+    /* Si la priorité est mauvaise, ça fera (10 + 10) % 3 = 20 % 3 = 2 */
+    res = 10 + 10 % 3;
+    
+    if (res == 11) {
+        return 1;
+    }
     return 0;
 }

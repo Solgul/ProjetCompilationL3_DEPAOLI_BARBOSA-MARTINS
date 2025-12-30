@@ -1,0 +1,20 @@
+/* Test : Arithmétique sur les char et comparaison */
+int main(void) {
+    char c;
+    int res;
+    
+    c = 'a';
+    /* 'b' vaut 'a' + 1 */
+    if (c + 1 == 'b') {
+        res = 1;
+    } else {
+        res = 0;
+    }
+    
+    /* Comparaison char et int */
+    if (c < 1000) {
+        res = res + 1;
+    }
+    
+    return res;
+}

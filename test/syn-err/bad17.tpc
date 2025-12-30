@@ -1,0 +1,10 @@
+/* ERREUR : Comparaison de structures */
+struct S { int a; };
+
+int main(void) {
+    struct S s1, s2;
+    if (s1 == s2) { /* Erreur sémantique : pas d'opérateur == pour les structures */
+        return 1;
+    }
+    return 0;
+}

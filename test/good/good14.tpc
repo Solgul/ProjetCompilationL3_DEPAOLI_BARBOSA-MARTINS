@@ -1,14 +1,16 @@
-/* Test structures dans fonction */
-struct Engine {
-    int power;
-};
-
-int main(void){
-    struct Car {
-        int id;
-        struct Engine motor;
-    };
-    struct Car c;
-    c.motor.power = 100;
-    return c.motor.power;
+/* Test : Parenthèses multiples et opérateurs unaires en chaîne */
+int main(void) {
+    int a;
+    int b;
+    a = 10;
+    
+    /* Parenthèses superflues (doit passer) */
+    b = ((a));
+    
+    /* Enchaînement d'opérateurs unaires */
+    if (!!(a == 10)) { /* double négation */
+        b = - -a;      /* moins moins = plus (si espaces gérés) */
+    }
+    
+    return (((b)));
 }

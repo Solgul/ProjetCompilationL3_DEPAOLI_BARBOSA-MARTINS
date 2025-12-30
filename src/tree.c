@@ -7,6 +7,8 @@ extern int lineno;       /* from lexer */
 
 static const char *StringFromLabel[] = {
   "Prog",
+  "GlobalDecl",
+  "GlobalDecls",
   "DeclStruct",
   "DeclStart",
   "DeclStarts",

@@ -1,0 +1,17 @@
+/* Test : Boucle While et Récursivité */
+int fact(int n) {
+    if (n <= 1) return 1;
+    return n * fact(n - 1);
+}
+
+int main(void) {
+    int i, sum;
+    i = 5;
+    sum = 0;
+    
+    while (i > 0) {
+        sum = sum + fact(i);
+        i = i - 1;
+    }
+    return sum;
+}

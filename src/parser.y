@@ -27,20 +27,40 @@ Node *root = NULL;
 
 %token <node> ADDSUB DIVSTAR EQ ORDER TYPE STRUCT OR AND IF ELSE WHILE RETURN VOID NUM CHARACTER IDENT DOT NOT
 
-%type <node> Prog DeclStarts DeclStart Type DeclVars Declarateurs DeclFoncts DeclFonct EnTeteFonct Parametres ListTypVar Corps SuiteInstr IdentAffect Instr Exp TB FB M E T F Arguments ListExp
+%type <node> Prog GlobalDecl GlobalDecls DeclStruct DeclStarts DeclStart Type DeclVars Declarateurs DeclFoncts DeclFonct EnTeteFonct Parametres ListTypVar Corps SuiteInstr IdentAffect Instr Exp TB FB M E T F Arguments ListExp
 
 %%
 Prog :
-    DeclStarts DeclFoncts {
-                        fprintf(stderr,"5");
-                        $$ = makeNode(Prog);
-                        if($1 != NULL){
-                            addChild($$, $1);
-                        }
-                        addChild($$, $2);
-                        fprintf(stderr,"6");
-                        printTree($$);
-                        deleteTree($$);
+    GlobalDecls { 
+        fprintf(stderr, "Parsing terminé avec succès\n");
+        $$ = makeNode(Prog);
+        addChild($$, $1);
+        root = $$;
+        /* Note: printTree est fait dans le main */
+    }
+;
+
+/* Une liste générique qui accepte tout (Variables, Fonctions, Structs) */
+GlobalDecls :
+    GlobalDecls GlobalDecl {
+        $$ = $1;
+        /* On ajoute le nouvel élément à la liste */
+        addChild($$, $2);
+    }
+    | /* vide */ {
+        $$ = makeNode(DeclStarts); /* On utilise ce label comme conteneur racine */
+    }
+;
+
+GlobalDecl :
+    DeclVars { 
+        $$ = $1; 
+    }
+    | DeclStruct { 
+        $$ = $1; 
+    }
+    | DeclFonct { 
+        $$ = $1; 
     }
 ;
 

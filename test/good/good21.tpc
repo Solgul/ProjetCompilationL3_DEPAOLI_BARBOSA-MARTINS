@@ -1,0 +1,18 @@
+/* Test : Assignation multiple et priorité mixte */
+int main(void) {
+    int a, b, c;
+    int res;
+    
+    /* Assignation enchaînée (si supporté par votre grammaire) */
+    a = b = c = 5;
+    
+    /* Priorité : * avant + avant == avant && */
+    /* 5 + 5 * 5 == 30 && 1 -> 30 == 30 && 1 -> 1 && 1 -> 1 */
+    if (a + b * c == 30 && 1) {
+        res = 1;
+    } else {
+        res = 0;
+    }
+    
+    return res;
+}
