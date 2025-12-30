@@ -5,22 +5,17 @@
 #include "tree.h"
 
 int yylex();
-extern int yylineno;
+extern int lineno;
 extern char *yytext; // Utile pour voir sur quel mot ça plante
 
-/* CHANGE : Message d'erreur détaillé */
 void yyerror(const char *s) {
-    fprintf(stderr, "Erreur ligne %d: %s (token lu: '%s')\n", yylineno, s, yytext);
+    fprintf(stderr, "Erreur syntaxique ligne %d : %s\n",
+            lineno, s);
 }
 
 Node *root = NULL;
 int print_tree = 0;
 %}
-
-/* Active les messages d'erreur détaillés de Bison */
-%define parse.error verbose
-/* Active le mode debug si nécessaire */
-%define parse.trace
 
 %union{
     Node* node;
