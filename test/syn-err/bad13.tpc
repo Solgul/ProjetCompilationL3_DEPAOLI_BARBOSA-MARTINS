@@ -1,7 +1,14 @@
 /* test/syn-err/bad13.tpc */
-int f(void) { return 1; }
+/* Test structures imbriquées */
+struct Car {
+    int id;
+    struct Engine {
+        int power;
+    } motor;
+};
 
-[cite_start]/* ERREUR: Struct globale après fonction [cite: 72] */
-struct Retard { int x; };
-
-int main(void){ return 0; }
+int main(void){
+    struct Car c;
+    c.motor.power = 100;
+    return c.motor.power;
+}

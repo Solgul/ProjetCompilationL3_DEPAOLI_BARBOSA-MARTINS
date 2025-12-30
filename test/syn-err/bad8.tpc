@@ -3,6 +3,7 @@ int fonc(void){
 }
 
 /* ERREUR : Définition globale après une fonction */
+int b;
 struct Invalid {
     int a;
 };

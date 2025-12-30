@@ -1,5 +1,12 @@
 /* Priorité opérateurs */
 int main(void){
+    int val;
+    val = 10 + 60 % 3;
+    printf("%d\n", val);
+    int val2 = (10 + 60) % 3;
+    printf("%d\n", val2);
+    int val2 = (10 + 60) % 3;
+    printf("%d\n", val2);
     int res;
     res = 10 + 5 * 2; /* Doit faire 20, pas 30 */
     if (res > 10 && res < 100 || res == 0) {

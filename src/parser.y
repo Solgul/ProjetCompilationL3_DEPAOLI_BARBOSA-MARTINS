@@ -34,19 +34,24 @@ DeclStruct: STRUCT IDENT '{' DeclVars '}'';' {
                                                 addChild($$, $4);
                                             }
     ;
-DeclStart: DeclVars DeclStart {
+DeclStart: DeclStart DeclVars  {
                                     $$ = makeNode(DeclStart);
-                                    addChild($$, $1);
+                                    addSibling($$, $1);
                                     addChild($$, $2);
                                 }
-    | DeclStruct DeclStart {
+    | DeclStart DeclStruct  {
                                 $$ = makeNode(DeclStart);
-                                addChild($$, $1);
+                                addSibling($$, $1);
                                 addChild($$, $2);
                             }
-    | {
+    | DeclVars {
             $$ = makeNode(DeclStart);
+            addChild($$, $1);
         }
+    |DeclStruct {
+        $$ = makeNode(DeclStart);
+        addChild($$, $1);
+    }
     ; 
 Type: TYPE {
                 $$ = makeNode(Type);

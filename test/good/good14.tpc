@@ -1,0 +1,14 @@
+/* Test structures dans fonction */
+struct Engine {
+    int power;
+};
+
+int main(void){
+    struct Car {
+        int id;
+        struct Engine motor;
+    };
+    struct Car c;
+    c.motor.power = 100;
+    return c.motor.power;
+}

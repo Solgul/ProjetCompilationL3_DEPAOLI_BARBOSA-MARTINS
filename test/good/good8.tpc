@@ -3,6 +3,12 @@ struct Box {
     int w, h;
 };
 
+int a;
+
+struct Test {
+    int x, y;
+};
+
 int area(struct Box b){
     return b.w * b.h;
 }
