@@ -2,10 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <getopt.h>
 #include "tree.h"
 
 int yylex();
 extern int lineno;
+extern FILE *yyin;
 extern char *yytext; // Utile pour voir sur quel mot ça plante
 
 void yyerror(const char *s) {
@@ -364,39 +366,64 @@ ListExp:
 
 %%
 
-void print_help(const char *progname) {
-    printf("Usage: %s [options] < [path]\n", progname);
+void print_help(const char *exeName) {
+    printf("Usage: %s [OPTIONS] [FILE.tpc]\n", exeName);
     printf("Options:\n");
-    printf("  -t        Affiche l'arbre syntaxique (AST)\n");
-    printf("  -h        Affiche cette aide\n");
+    printf("  -t, --tree    Affiche l'arbre abstrait sur la sortie standard\n");
+    printf("  -h, --help \n");
+    printf("\n");
+}
+
+int handle_opt(int argc, char *argv[]) {
+    int opt; int val = 0;
+    static struct option long_options[] = {
+        {"tree", no_argument, 0, 't'},
+        {"help", no_argument, 0, 'h'},
+        {0, 0, 0, 0}
+    };
+    while ((opt = getopt_long(argc, argv, "th", long_options, NULL)) != -1) {
+        switch (opt) {
+        case 't':
+            val = 1;
+            break;
+        case 'h':
+            print_help(argv[0]);
+            return 0;
+        default:
+            fprintf(stderr, "Option incorrecte.\n");
+            print_help(argv[0]);
+            return 2;
+        }
+    }
+
+    if(optind < argc){
+        FILE *f = fopen(argv[optind], "r");
+        if(!f){
+            fprintf(stderr, "votre fichier est invalide");
+            return 1;
+        }
+        yyin = f;
+    }
+
+    return val;
 }
 
 int main(int argc, char **argv){
-    int opt;
-    //yydebug = 1; // Décommentez pour un déluge d'informations de debug
-    
-    while ((opt = getopt(argc, argv, "th")) != -1) {
-        switch (opt) {
-            case 't':
-                print_tree = 1;
-                break;
-            case 'h':
-                print_help(argv[0]);
-                return 0;
-            default:
-                fprintf(stderr, "Usage: %s [-t] [file]\n", argv[0]);
-                return 1;
-        }
-    }
+yyin = stdin;
+   int opt = handle_opt(argc, argv);
 
     int res = yyparse();
     
     if (res == 0 && root != NULL) {
-        if (print_tree) {
+        if (opt == 1) {
             printTree(root);
         }
         deleteTree(root);
     }
     
+    if(yyin != stdin){
+        fclose(yyin);
+    }
+
     return res;
 }
