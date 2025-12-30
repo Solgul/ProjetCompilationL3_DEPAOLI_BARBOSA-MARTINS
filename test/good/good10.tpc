@@ -1,0 +1,9 @@
+/* Priorité opérateurs */
+int main(void){
+    int res;
+    res = 10 + 5 * 2; /* Doit faire 20, pas 30 */
+    if (res > 10 && res < 100 || res == 0) {
+        return 1;
+    }
+    return 0;
+}

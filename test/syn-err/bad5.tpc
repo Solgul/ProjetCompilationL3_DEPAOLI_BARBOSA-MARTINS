@@ -1,0 +1,2 @@
+struct { int x; } a; /* Erreur : nom obligatoire */
+int main(void){ return 0; }

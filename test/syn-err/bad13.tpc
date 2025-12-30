@@ -1,0 +1,7 @@
+/* test/syn-err/bad13.tpc */
+int f(void) { return 1; }
+
+[cite_start]/* ERREUR: Struct globale après fonction [cite: 72] */
+struct Retard { int x; };
+
+int main(void){ return 0; }

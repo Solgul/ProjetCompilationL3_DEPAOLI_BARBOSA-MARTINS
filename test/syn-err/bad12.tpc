@@ -1,0 +1,6 @@
+/* test/syn-err/bad12.tpc */
+/* Erreur: affectation sur une constante */
+int main(void){
+    10 = a; /* Interdit */
+    return 0;
+}

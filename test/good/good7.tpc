@@ -1,0 +1,8 @@
+void rien(void) {
+    return; /* Test du return sans expression [cite: 17] */
+}
+
+int main(void) {
+    rien(); /* Test appel sans arguments */
+    return 0;
+}

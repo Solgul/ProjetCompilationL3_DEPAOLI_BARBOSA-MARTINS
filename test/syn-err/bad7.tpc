@@ -1,0 +1,7 @@
+struct Vide {
+    /* ERREUR : Vide */
+};
+
+int main(void){
+    return 0;
+}
