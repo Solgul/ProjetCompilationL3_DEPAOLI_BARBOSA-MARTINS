@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall
+CFLAGS = -Wall -g -Iobj -Isrc
 
 YACC = bison
 LEX = flex
@@ -19,11 +19,11 @@ $(OBJ)/tree.o : $(SOURCE)/tree.c $(SOURCE)/tree.h
 $(OBJ)/%.o : $(SOURCE)/%.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(OBJ)/$(PARSER).c $(OBJ)/$(PARSER).h &: $(SOURCE)/$(PARSER).y 
-	$(YACC) -d $< -o $@
-
 $(OBJ)/$(LEXER).c : $(SOURCE)/$(LEXER).lex
 	$(LEX) -o $@ $<
+
+$(OBJ)/$(PARSER).c $(OBJ)/$(PARSER).h &: $(SOURCE)/$(PARSER).y 
+	$(YACC) -d $< -o $@
 
 clean:
 	rm -f obj/*

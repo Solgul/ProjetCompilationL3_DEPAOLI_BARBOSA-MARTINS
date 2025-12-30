@@ -1,12 +1,31 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+#include "tree.h"
+
+extern int yylex();
+void yyerror(const char *s);
+extern int yylineno;
+Node *root;
+%}
+
+%type <node> DeclStruct DeclStart Prog Type DeclVars DeclFoncts DeclFonct EnTeteFonct Parametres ListTypVar Corps SuiteInstr IdentAffect Instr Exp TB FB M E T F Arguments ListExp
+
 %%
+Prog:  DeclStart DeclFoncts {
+    $$ = makeNode(Prog);
+    addChild($$, $1);
+    addChild($$, $2);
+    printTree($$);
+    deleteTree($$);
+}
+    ;
 DeclStruct : STRUCT ident '{' DeclVars '}'';'
     ;
 DeclStart : DeclVars DeclStart
     | DeclStruct DeclStart
     |
     ; 
-Prog:  DeclStart DeclFoncts
-    ;
 Type : TYPE
     | STRUCT IDENT
     ;
@@ -43,6 +62,7 @@ SuiteInstr:
     |
     ;
 IdentAffect : IDENT.IDENT
+    | IDENT
     ;
 Instr:
        IdentAffect '=' Exp ';'

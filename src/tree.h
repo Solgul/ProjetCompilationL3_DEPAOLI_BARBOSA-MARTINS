@@ -1,10 +1,42 @@
 /* tree.h */
 
 typedef enum {
+  DeclStruct,
+  DeclStart,
+  Prog,
+  Type,
+  DeclVars,
+  DeclFoncts,
+  DeclFonct,
+  EnTeteFonct,
+  Parametres,
+  ListTypVar,
+  Corps,
+  SuiteInstr,
+  IdentAffect,
+  Instr,
+  Exp,
+  TB,
+  FB,
+  M,
   E,
   T,
-  divstar,
-  id
+  F,
+  Arguments,
+  ListExp,
+  IDENT,
+  STRUCT,
+  VOID,
+  TYPE,
+  EQ,
+  IF,
+  OR,
+  AND,
+  ORDER,
+  ADDSUB,
+  DIVSTAR,
+  NUM,
+  CHARACTER
   /* list all other node labels, if any */
   /* The list must coincide with the string array in tree.c */
   /* To avoid listing them twice, see https://stackoverflow.com/a/10966395 */
