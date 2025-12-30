@@ -77,6 +77,7 @@ void addSibling(Node *node, Node *sibling) {
 }
 
 void addChild(Node *parent, Node *child) {
+  if (parent == NULL || child == NULL) return;
   if (parent->firstChild == NULL) {
     parent->firstChild = child;
   }
