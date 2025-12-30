@@ -36,12 +36,13 @@ Exemple :
 
 - ./bin/tpcas [OPTIONS] < FILE.tpc
 
+### LES OPTIONS
+
 -h permet d'afficher l'help de l'analyseur syntaxique.
 
 -t permet d'afficher l'arbre syntaxique généré.
 
-Le programme a aussi unegestion d'erreur qui renvoie 0 si tout se passe bien.
-1 en cas d'erreur syntaxique et 2 en cas d'autre type d'erreur.
+(si un h est rentré, l'aide sera affiché et tout le reste ignoré)
 
 ## 4. Difficultés : 
 

@@ -388,11 +388,11 @@ int handle_opt(int argc, char *argv[]) {
             break;
         case 'h':
             print_help(argv[0]);
-            return 0;
+            return 2;
         default:
             fprintf(stderr, "Option incorrecte.\n");
             print_help(argv[0]);
-            return 2;
+            return 3;
         }
     }
 
@@ -400,7 +400,7 @@ int handle_opt(int argc, char *argv[]) {
         FILE *f = fopen(argv[optind], "r");
         if(!f){
             fprintf(stderr, "votre fichier est invalide");
-            return 1;
+            return 2;
         }
         yyin = f;
     }
@@ -409,8 +409,11 @@ int handle_opt(int argc, char *argv[]) {
 }
 
 int main(int argc, char **argv){
-yyin = stdin;
-   int opt = handle_opt(argc, argv);
+    yyin = stdin;
+    int opt = handle_opt(argc, argv);
+    if(opt == 2){ //help or error
+        return 1;
+    }
 
     int res = yyparse();
     
