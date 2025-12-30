@@ -10,6 +10,7 @@ extern int yylineno;
 %option noyywrap
 %%
 
+[ \t\r]                  ;
 [+-]                     return ADDSUB;
 [*/%]                    return DIVSTAR;
 [{==}{!=}]               return EQ;
@@ -28,6 +29,7 @@ extern int yylineno;
 [a-zA-Z]+                return CHARACTER;
 [_a-zA-Z][_a-zA-Z0-9]*   return IDENT;
 "."                      return DOT;
+"!"                      return NOT;
 
 "//".* ;
 "/*" BEGIN COMM;

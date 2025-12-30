@@ -41,7 +41,8 @@ typedef enum {
   TR_NUM,
   TR_CHARACTER,
   TR_DOT,
-  TR_WHILE
+  TR_WHILE,
+  TR_NOT
   /* list all other node labels, if any */
   /* The list must coincide with the string array in tree.c */
   /* To avoid listing them twice, see https://stackoverflow.com/a/10966395 */
