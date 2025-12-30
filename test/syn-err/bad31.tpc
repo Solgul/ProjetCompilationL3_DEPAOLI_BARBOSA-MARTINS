@@ -1,0 +1,11 @@
+struct Box { int x; };
+
+void add(int a) {
+    return;
+}
+
+int main(void) {
+    struct Box b;
+    add(b); /* ERREUR : Attend int, reçoit struct Box */
+    return 0;
+}
