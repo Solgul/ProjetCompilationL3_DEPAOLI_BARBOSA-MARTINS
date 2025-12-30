@@ -1,7 +1,7 @@
 %{
 #include <stdio.h>
-#include "../obj/parser.h"   /* tokens Bison */
 #include "tree.h"
+#include "../obj/parser.h"   /* tokens Bison */
 int lineno = 1;
 %}
 
