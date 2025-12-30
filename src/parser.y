@@ -32,13 +32,13 @@ Node *root = NULL;
 %%
 Prog :
     DeclStarts DeclFoncts {
-                        fprintf(stderr,"2");
+                        fprintf(stderr,"5");
                         $$ = makeNode(Prog);
                         if($1 != NULL){
                             addChild($$, $1);
                         }
                         addChild($$, $2);
-                        fprintf(stderr,"3");
+                        fprintf(stderr,"6");
                         printTree($$);
                         deleteTree($$);
     }
