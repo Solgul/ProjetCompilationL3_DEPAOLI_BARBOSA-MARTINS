@@ -150,9 +150,9 @@ SuiteInstr:
                         }
     | {$$ = NULL;}
     ;
-IdentAffect : IDENT DOT IDENT {
+IdentAffect : IdentAffect DOT IDENT {
     $$ = makeNode(IdentAffect);
-    addChild($$, makeNode(TR_IDENT));
+    addChild($$, $1);
     addChild($$, makeNode(TR_DOT));
     addChild($$, makeNode(TR_IDENT));
 }
