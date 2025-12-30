@@ -12,7 +12,8 @@ SOURCE = src
 TEST = test
 OBJ = obj
 
-$(BINARY)/tpcas.o : $(OBJ)/$(PARSER).o $(OBJ)/$(PARSER).o $(OBJ)/$(PARSER).o 
+$(BINARY)/tpcas.o : $(OBJ)/$(LEXER).o $(OBJ)/$(PARSER).o $(OBJ)/tree.o
+	$(CC) -o $@ $^
 
 $(OBJ)/tree.o : $(SOURCE)/tree.c $(SOURCE)/tree.h
 

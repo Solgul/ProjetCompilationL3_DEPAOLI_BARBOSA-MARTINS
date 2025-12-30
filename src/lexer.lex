@@ -1,9 +1,13 @@
 %{
-
+#include "tree.h"
+#include "../obj/parser.h"
+int lineno = 1;
+extern int yylineno;
 %}
 %x COMM
 %option nounput
 %option noinput
+%option noyywrap
 %%
 
 [+-]                     return ADDSUB;

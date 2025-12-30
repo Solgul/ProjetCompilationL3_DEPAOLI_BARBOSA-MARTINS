@@ -3,8 +3,10 @@
 #include <stdlib.h>
 #include "tree.h"
 
-extern int yylex();
-void yyerror(const char *s);
+int yylex();
+void yyerror(const char *s){
+    fprintf(stderr, "error : %s\n", s);
+};
 extern int yylineno;
 Node *root;
 %}
@@ -20,10 +22,9 @@ Node *root;
 %%
 Prog:  DeclStart DeclFoncts {
                                 $$ = makeNode(Prog);
+                                root = $$;
                                 addChild($$, $1);
                                 addChild($$, $2);
-                                printTree($$);
-                                deleteTree($$);
                             }
     ;
 DeclStruct: STRUCT IDENT '{' DeclVars '}'';' {
@@ -145,7 +146,7 @@ SuiteInstr:
                         }
     | {$$ = NULL;}
     ;
-IdentAffect : IDENT'.'IDENT {
+IdentAffect : IDENT DOT IDENT {
     $$ = makeNode(IdentAffect);
     addChild($$, makeNode(TR_IDENT));
     addChild($$, makeNode(TR_DOT));
@@ -324,3 +325,8 @@ ListExp:
 }
     ;
 %%
+int main(){
+    printTree(root);
+    deleteTree(root);
+    return yyparse();
+}
