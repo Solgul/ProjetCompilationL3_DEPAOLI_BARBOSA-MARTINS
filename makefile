@@ -28,7 +28,7 @@ $(OBJ)/%.o : $(SOURCE)/%.c
 	@mkdir -p $(OBJ)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(OBJ)/$(LEXER).c : $(SOURCE)/$(LEXER).lex $(OBJ)/$(PARSER).h
+$(OBJ)/$(LEXER).c : $(SOURCE)/$(LEXER).lex $(OBJ)/$(PARSER).h $(SOURCE)/tree.h
 	@mkdir -p $(OBJ)
 	$(LEX) -o $@ $<
 

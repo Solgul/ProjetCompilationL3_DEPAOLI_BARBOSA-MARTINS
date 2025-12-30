@@ -12,7 +12,7 @@ Node *root = NULL;
 %}
 
 %union{
-    Node * node;
+    Node* node;
 }
 
 %nonassoc LOWER_THAN_ELSE

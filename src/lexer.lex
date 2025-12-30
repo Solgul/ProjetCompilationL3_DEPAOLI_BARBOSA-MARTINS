@@ -1,42 +1,83 @@
 %{
+#include <stdio.h>
+#include "../obj/parser.h"   /* tokens Bison */
 #include "tree.h"
-#include "../obj/parser.h"
 int lineno = 1;
-extern int yylineno;
 %}
+
+/* état pour les commentaires multi-lignes */
 %x COMM
+
+%option noyywrap
 %option nounput
 %option noinput
-%option noyywrap
-%%
 
-[ \t\r]                  ;
-[{==}{!=}]               return EQ;
-[<{<=}{>=}>]             return ORDER;
-[+-]                     return ADDSUB;
-[*/%]                    return DIVSTAR;
-"||"                     return OR;
-"&&"                     return AND;
-"int"|"char"             return TYPE;
-"struct"                 return STRUCT;
-"void"                   return VOID;
+%%
+        /* ===================== */
+        /* ESPACES ET RETOURS   */
+        /* ===================== */
+[ \t\r]+                 ;
+\n                       { lineno++; }
+
+        /* ===================== */
+        /* COMMENTAIRES          */
+        /* ===================== */
+"//".*                   ;              /* commentaire ligne */
+"/*"                     BEGIN(COMM);
+
+<COMM>"*/"               BEGIN(INITIAL);
+<COMM>.|\n               ;
+
+        /* ===================== */
+        /* MOTS-CLÉS (minuscules obligatoires) */
+        /* ===================== */
 "if"                     return IF;
 "else"                   return ELSE;
-"while"                  return WHILE;
 "return"                 return RETURN;
-[0-9]+                   return NUM;
-[a-zA-Z]+                return CHARACTER;
-[_a-zA-Z][_a-zA-Z0-9]*   return IDENT;
-[({});,=!]               return yytext[0];
-"."                      return DOT;
+"while"                  return WHILE;
+"int"|"char"             return TYPE;
+
+        /* ===================== */
+        /* OPÉRATEURS            */
+        /* ===================== */
+"=="|"!="                return EQ;
+"<="|">="|"<"|">"        return ORDER;
+"&&"                     return AND;
+"||"                     return OR;
+"+"|"-"                  return ADDSUB;
+"*"|"/"|"%"              return DIVSTAR;
 "!"                      return NOT;
-[\n]                     ;
+"="                      return '=';
 
+        /* ===================== */
+        /* SÉPARATEURS           */
+        /* ===================== */
+";"                      return ';';
+","                      return ',';
+"("                      return '(';
+")"                      return ')';
+"{"                      return '{';
+"}"                      return '}';
 
-"//".* ;
-"/*" BEGIN COMM;
+        /* ===================== */
+        /* CONSTANTES            */
+        /* ===================== */
+[0-9]+                   return NUM;
 
+        /* caractère littéral : 'a', '\n', '\t', '\'' */
+\'(\\[nt\\\']|[^\\'])\'  return CHARACTER;
 
-<COMM>"*/" BEGIN INITIAL;
-<COMM>[.\n] ;
+        /* ===================== */
+        /* IDENTIFICATEURS       */
+        /* ===================== */
+[_a-zA-Z][_a-zA-Z0-9]*   return IDENT;
+
+        /* ===================== */
+        /* ERREURS LEXICALES     */
+        /* ===================== */
+. {
+    fprintf(stderr,
+        "Erreur lexicale ligne %d : caractère invalide '%s'\n",
+        lineno, yytext);
+}
 %%
