@@ -348,5 +348,12 @@ ListExp:
 %%
 int main(){
     fprintf(stderr, "1\n");
-    return yyparse();
+    int res = yyparse();
+    fprintf(stderr, "2\n");
+    if (res == 0 && root != NULL) {
+        fprintf(stderr, "3\n");
+        printTree(root);
+        deleteTree(root);
+    }
+    return res;
 }
