@@ -1,0 +1,8 @@
+/* ERREUR : Fonction int qui retourne vide */
+int func(void) {
+    return; /* Interdit, on attend un int */
+}
+
+int main(void) {
+    return 0;
+}
