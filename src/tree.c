@@ -9,6 +9,7 @@ static const char *StringFromLabel[] = {
   "Prog",
   "DeclStruct",
   "DeclStart",
+  "DeclStarts",
   "Type",
   "DeclVars",
   "Declarateurs",

@@ -4,6 +4,7 @@ typedef enum {
   Prog,
   DeclStruct,
   DeclStart,
+  DeclStarts,
   Type,
   DeclVars,
   Declarateurs,

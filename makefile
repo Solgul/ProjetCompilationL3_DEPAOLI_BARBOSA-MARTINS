@@ -21,16 +21,20 @@ $(EXEC) : $(OBJ)/$(LEXER).o $(OBJ)/$(PARSER).o $(OBJ)/tree.o
 
 $(OBJ)/tree.o : $(SOURCE)/tree.c $(SOURCE)/tree.h
 
+$(OBJ)/$(PARSER).o: $(OBJ)/$(PARSER).c $(SOURCE)/tree.h
+$(OBJ)/$(LEXER).o: $(OBJ)/$(LEXER).c $(SOURCE)/tree.h
+
 $(OBJ)/%.o : $(SOURCE)/%.c
 	@mkdir -p $(OBJ)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(OBJ)/$(PARSER).c $(OBJ)/$(PARSER).h &: $(SOURCE)/$(PARSER).y 
-	$(YACC) -d $< -o $@
-
 $(OBJ)/$(LEXER).c : $(SOURCE)/$(LEXER).lex $(OBJ)/$(PARSER).h
+	@mkdir -p $(OBJ)
 	$(LEX) -o $@ $<
 
+$(OBJ)/$(PARSER).c $(OBJ)/$(PARSER).h &: $(SOURCE)/$(PARSER).y
+	@mkdir -p $(OBJ)
+	$(YACC) -d -o $(OBJ)/$(PARSER).c $<
 
 clean:
 	rm -fr $(OBJ)

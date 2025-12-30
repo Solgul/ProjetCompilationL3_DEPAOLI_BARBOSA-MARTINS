@@ -24,12 +24,14 @@ extern int yylineno;
 "while"                  return WHILE;
 "return"                 return RETURN;
 "void"                   return VOID;
-[({});,=!]                return yytext[0];
+[({});,=!]               return yytext[0];
 [0-9]+                   return NUM;
 [a-zA-Z]+                return CHARACTER;
 [_a-zA-Z][_a-zA-Z0-9]*   return IDENT;
 "."                      return DOT;
 "!"                      return NOT;
+[\n]                     ;
+
 
 "//".* ;
 "/*" BEGIN COMM;

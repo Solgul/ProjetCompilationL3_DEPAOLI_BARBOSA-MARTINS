@@ -8,7 +8,7 @@ void yyerror(const char *s){
     fprintf(stderr, "error : %s\n", s);
 };
 extern int yylineno;
-Node *root;
+Node *root = NULL;
 %}
 
 %union{
@@ -32,24 +32,15 @@ Node *root;
 %%
 Prog :
     DeclStarts DeclFoncts {
+                        fprintf(stderr,"2");
                         $$ = makeNode(Prog);
-                        addChild($$, $1);
+                        if($1 != NULL){
+                            addChild($$, $1);
+                        }
                         addChild($$, $2);
-                        root = $$;
-    }
-;
-
-DeclStarts: 
-    DeclStarts DeclStart  {
-                        $$ = $1;
-                        addChild($$, $2);
-    }
-    | DeclStart {
-        $$ = makeNode(DeclStarts);
-        addChild($$, $1);
-    }
-    | {
-        $$ = NULL;
+                        fprintf(stderr,"3");
+                        printTree($$);
+                        deleteTree($$);
     }
 ;
 
@@ -65,6 +56,17 @@ DeclStart:
     }
 ;
 
+DeclStarts: 
+    DeclStarts DeclStart  {
+                        $$ = makeNode(DeclStarts);
+                        addChild($$, $1);
+                        addChild($$, $2);
+    }
+    | {
+        $$ = NULL;
+    }
+;
+
 Type: 
     TYPE {
         $$ = makeNode(TR_TYPE);
@@ -75,18 +77,12 @@ Type:
     }
 ;
 
-DeclVars:
-    DeclVars Type Declarateurs ';' {
-                                $$ = $1;
-                                addChild($$, $2);
-                                addChild($$, $3);
-  }
-  | Type Declarateurs ';' {
-    $$ = makeNode(DeclVars);
-    addChild($$, $1);
-    addChild($$, $2);
-  }
-
+DeclVars : 
+    Type Declarateurs ';' {
+                    $$ = makeNode(DeclVars);
+                    addChild($$, $1);
+                    addChild($$, $2);
+        }
 ;
 
 Declarateurs:
@@ -163,7 +159,9 @@ ListTypVar:
 Corps:
     '{' DeclStarts SuiteInstr '}' {
                             $$ = makeNode(Corps);
-                            addChild($$, $2);
+                            if($2 != NULL){
+                                addChild($$, $2);
+                            }
                             addChild($$, $3);
     }
 ;
@@ -349,7 +347,6 @@ ListExp:
 
 %%
 int main(){
-    printTree(root);
-    deleteTree(root);
+    fprintf(stderr, "1\n");
     return yyparse();
 }
