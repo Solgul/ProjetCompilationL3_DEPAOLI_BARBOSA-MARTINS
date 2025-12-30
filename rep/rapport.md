@@ -3,7 +3,7 @@ Binôme :
 
 Rafael BARBOSA MARTINS 
 
-Ugo Depaoli
+Ugo DEPAOLI
 
 Groupe 3
 
