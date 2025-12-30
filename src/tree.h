@@ -1,9 +1,9 @@
 /* tree.h */
 
 typedef enum {
+  Prog,
   DeclStruct,
   DeclStart,
-  Prog,
   Type,
   DeclVars,
   Declarateurs,

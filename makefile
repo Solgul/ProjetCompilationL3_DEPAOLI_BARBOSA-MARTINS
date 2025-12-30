@@ -13,7 +13,7 @@ TEST = test
 OBJ = obj
 EXEC = $(BINARY)/tpcas
 
-all : $(EXEC)
+all : clean $(EXEC)
 
 $(EXEC) : $(OBJ)/$(LEXER).o $(OBJ)/$(PARSER).o $(OBJ)/tree.o
 	@mkdir -p $(BINARY)
@@ -33,4 +33,5 @@ $(OBJ)/$(LEXER).c : $(SOURCE)/$(LEXER).lex $(OBJ)/$(PARSER).h
 
 
 clean:
-	rm -f obj/*
+	rm -fr $(OBJ)
+	rm -fr $(BINARY)

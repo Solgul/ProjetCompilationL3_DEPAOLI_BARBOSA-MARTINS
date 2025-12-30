@@ -15,13 +15,23 @@ Node *root;
     Node * node;
 }
 
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
+
+%left OR
+%left AND
+%left EQ
+%left ORDER
+%left ADDSUB
+%left DIVSTAR
+
 %token <node> ADDSUB DIVSTAR EQ ORDER TYPE STRUCT OR AND IF ELSE WHILE RETURN VOID NUM CHARACTER IDENT DOT NOT
 
-%type <node> Prog DeclStruct DeclStarts DeclStart Type DeclVars Declarateurs DeclFoncts DeclFonct EnTeteFonct Parametres ListTypVar Corps SuiteInstr IdentAffect Instr Exp TB FB M E T F Arguments ListExp
+%type <node> Prog DeclStarts DeclStart Type DeclVars Declarateurs DeclFoncts DeclFonct EnTeteFonct Parametres ListTypVar Corps SuiteInstr IdentAffect Instr Exp TB FB M E T F Arguments ListExp
 
 %%
-Prog: 
-    DeclStart DeclFoncts {
+Prog :
+    DeclStarts DeclFoncts {
                         $$ = makeNode(Prog);
                         addChild($$, $1);
                         addChild($$, $2);
@@ -31,23 +41,23 @@ Prog:
 
 DeclStarts: 
     DeclStarts DeclStart  {
-                        $$ = makeNode(DeclStarts);
-                        addSibling($$, $1);
+                        $$ = $1;
                         addChild($$, $2);
+    }
+    | DeclStart {
+        $$ = makeNode(DeclStarts);
+        addChild($$, $1);
+    }
+    | {
+        $$ = NULL;
     }
 ;
 
-DeclStart : 
+DeclStart: 
     DeclVars {
             $$ = $1;
     }
-    | DeclStruct {
-            $$ = $1;
-    }
-;
-
-DeclStruct: 
-    STRUCT IDENT '{' DeclVars '}'';' {
+    | STRUCT IDENT '{' DeclVars '}'';' {
                                 $$ = makeNode(DeclStruct);
                                 addChild($$, makeNode(TR_STRUCT));
                                 addChild($$, makeNode(TR_IDENT));
@@ -68,10 +78,15 @@ Type:
 DeclVars:
     DeclVars Type Declarateurs ';' {
                                 $$ = $1;
-                                $$ = makeNode(DeclVars);
                                 addChild($$, $2);
                                 addChild($$, $3);
   }
+  | Type Declarateurs ';' {
+    $$ = makeNode(DeclVars);
+    addChild($$, $1);
+    addChild($$, $2);
+  }
+
 ;
 
 Declarateurs:
@@ -91,7 +106,7 @@ DeclFoncts:
                             $$ = $1;
                             addChild($$, $2);
     }
-    |  DeclFonct {
+    | DeclFonct {
                 $$ = makeNode(DeclFoncts);
                 addChild($$, $1);
     }
@@ -146,7 +161,7 @@ ListTypVar:
 ;
 
 Corps:
-    '{' DeclStart SuiteInstr '}' {
+    '{' DeclStarts SuiteInstr '}' {
                             $$ = makeNode(Corps);
                             addChild($$, $2);
                             addChild($$, $3);
@@ -158,8 +173,8 @@ SuiteInstr:
                     $$ = $1;
                     addChild($$, $2);
     }
-    | {
-        $$ = NULL;
+    | Instr {
+        $$ = $1;
     }
 ;
 
@@ -168,7 +183,7 @@ IdentAffect :
                     $$ = makeNode(TR_DOT);
                     addChild($$, $1);
                     addChild($$, makeNode(TR_IDENT));
-}
+    }
     | IDENT {
         $$ = makeNode(TR_IDENT);
     }
@@ -180,7 +195,7 @@ Instr:
             addChild($$, $1);
             addChild($$, $3);
     }
-    | IF '(' Exp ')' Instr {
+    | IF '(' Exp ')' Instr %prec LOWER_THAN_ELSE {
             $$ = makeNode(TR_IF);
             addChild($$, $3);
             addChild($$, $5);
@@ -201,7 +216,7 @@ Instr:
     | IDENT '(' Arguments  ')' ';' {
             $$ = makeNode(Instr);
             addChild($$, makeNode(TR_IDENT));
-            addChild($$, $3);
+            addChild($$, $3 ? $3 : makeNode(Arguments));
     }
     | RETURN Exp ';' {
             $$ = makeNode(TR_RETURN);
@@ -212,9 +227,9 @@ Instr:
     }
     | '{' SuiteInstr '}' {
             $$ = makeNode(Instr);
-            addChild($$, $2);
+            addChild($$, $2 ? $2 : makeNode(SuiteInstr));
     }
-    |  ';'{
+    | ';'{
             $$ = makeNode(Instr);
     }
 ;
