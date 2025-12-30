@@ -1,0 +1,9 @@
+/* ERREUR : Définition de fonction imbriquée */
+int main(void) {
+    
+    int sub_func(void) { /* Interdit en C standard et TPC */
+        return 1;
+    }
+
+    return 0;
+}

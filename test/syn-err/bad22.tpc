@@ -1,0 +1,8 @@
+/* ERREUR : Pas assez d'arguments */
+int add(int a, int b) {
+    return a + b;
+}
+
+int main(void) {
+    return add(10); /* Erreur : attend 2 arguments, reçu 1 */
+}

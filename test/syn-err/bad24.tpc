@@ -1,0 +1,9 @@
+/* ERREUR : Else sans If */
+int main(void) {
+    int a;
+    a = 0;
+    else { /* Erreur : pas de if correspondant avant */
+        a = 1;
+    }
+    return a;
+}
