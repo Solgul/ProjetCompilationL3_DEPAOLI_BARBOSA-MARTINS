@@ -17,10 +17,10 @@ Node *root;
     Node * node;
 }
 
-%type <node> DeclStruct DeclStart Prog Type DeclVars Declarateurs DeclFoncts DeclFonct EnTeteFonct Parametres ListTypVar Corps SuiteInstr IdentAffect Instr Exp TB FB M E T F Arguments ListExp
+%type <node> Prog DeclStruct DeclStarts DeclStart Type DeclVars Declarateurs DeclFoncts DeclFonct EnTeteFonct Parametres ListTypVar Corps SuiteInstr IdentAffect Instr Exp TB FB M E T F Arguments ListExp
 
 %%
-Prog:  DeclStart DeclFoncts {
+Prog: DeclStart DeclFoncts {
                                 $$ = makeNode(Prog);
                                 root = $$;
                                 addChild($$, $1);
@@ -34,23 +34,22 @@ DeclStruct: STRUCT IDENT '{' DeclVars '}'';' {
                                                 addChild($$, $4);
                                             }
     ;
-DeclStart: DeclStart DeclVars  {
-                                    $$ = makeNode(DeclStart);
+DeclStarts: DeclStarts DeclStart  {
+                                    $$ = makeNode(DeclStarts);
                                     addSibling($$, $1);
                                     addChild($$, $2);
                                 }
-    | DeclStart DeclStruct  {
-                                $$ = makeNode(DeclStart);
+    | DeclStarts DeclStart  {
+                                $$ = makeNode(DeclStarts);
                                 addSibling($$, $1);
                                 addChild($$, $2);
                             }
-    | DeclVars {
-            $$ = makeNode(DeclStart);
-            addChild($$, $1);
+    ;
+DeclStart : DeclVars {
+            $$ = $1;
         }
-    |DeclStruct {
-        $$ = makeNode(DeclStart);
-        addChild($$, $1);
+    | DeclStruct {
+        $$ = $1;
     }
     ; 
 Type: TYPE {
@@ -292,12 +291,10 @@ F   :  ADDSUB F {
     addChild($$, $2);
 }
     |  NUM {
-    $$ = makeNode(F);
-    addChild($$, makeNode(TR_NUM));
+    $$ = makeNode(TR_NUM);
 }
     |  CHARACTER {
-    $$ = makeNode(F);
-    addChild($$, makeNode(TR_CHARACTER));
+    $$ = makeNode(TR_CHARACTER);
 }
     |  IDENT {
     $$ = makeNode(F);
@@ -311,8 +308,7 @@ F   :  ADDSUB F {
     ;
 Arguments:
        ListExp {
-    $$ = makeNode(Arguments);
-    addChild($$, $1);
+    $$ = $1;
 }
     | {
     $$ = makeNode(Arguments);
@@ -325,8 +321,7 @@ ListExp:
     addChild($$, $3);
 }
     |  Exp {
-        $$ = makeNode(ListExp);
-        addChild($$, $1);
+        $$ = $1;
 }
     ;
 %%

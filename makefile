@@ -20,11 +20,12 @@ $(OBJ)/tree.o : $(SOURCE)/tree.c $(SOURCE)/tree.h
 $(OBJ)/%.o : $(SOURCE)/%.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(OBJ)/$(LEXER).c : $(SOURCE)/$(LEXER).lex
-	$(LEX) -o $@ $<
-
 $(OBJ)/$(PARSER).c $(OBJ)/$(PARSER).h &: $(SOURCE)/$(PARSER).y 
 	$(YACC) -d $< -o $@
+
+$(OBJ)/$(LEXER).c : $(SOURCE)/$(LEXER).lex $(OBJ)/$(PARSER).h
+	$(LEX) -o $@ $<
+
 
 clean:
 	rm -f obj/*
