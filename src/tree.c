@@ -65,6 +65,9 @@ Node *makeNode(label_t label) {
   node->label = label;
   node-> firstChild = node->nextSibling = NULL;
   node->lineno=lineno;
+  node->ident = "\0";
+  node->num = 0;
+  node->tank = '\0'; 
   return node;
 }
 
@@ -106,6 +109,15 @@ void printTree(Node *node) {
     printf(rightmost[depth] ? "\u2514\u2500\u2500 " : "\u251c\u2500\u2500 ");
   }
   printf("%s", StringFromLabel[node->label]);
+  if (node->ident[0] != '\0') {
+      printf(": [%s]", node->ident); 
+  }else if (node->num!= 0) {
+      printf(": [%d]", node->num); 
+  }else if (node->tank!= '\0') {
+      printf(": [%c]", node->tank); 
+  } else if (node->label == TR_IDENT || node->label == TR_TYPE || node->label == TR_STRUCT) {
+      printf(": missing"); 
+  }
   printf("\n");
   depth++;
   for (Node *child = node->firstChild; child != NULL; child = child->nextSibling) {

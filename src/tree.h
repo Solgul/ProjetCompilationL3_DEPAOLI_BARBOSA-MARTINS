@@ -56,6 +56,9 @@ typedef struct Node {
   label_t label;
   struct Node *firstChild, *nextSibling;
   int lineno;
+  char * ident;
+  int num;
+  char tank;
 } Node;
 
 Node *makeNode(label_t label);
