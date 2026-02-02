@@ -1,5 +1,6 @@
 %{
 #include <stdio.h>
+#include <string.h>
 #include "tree.h"
 #include "../obj/parser.h"   /* tokens Bison */
 int lineno = 1;
@@ -35,18 +36,18 @@ int lineno = 1;
 "else"                   return ELSE;
 "return"                 return RETURN;
 "while"                  return WHILE;
-"int"|"char"             return TYPE;
+"int"|"char"             { yylval.str = strdup(yytext); return TYPE; }
 "void"                   return VOID;
 
         /* ===================== */
         /* OPÉRATEURS            */
         /* ===================== */
-"=="|"!="                return EQ;
-"<="|">="|"<"|">"        return ORDER;
+"=="|"!="                { yylval.str = strdup(yytext); return EQ; }
+"<="|">="|"<"|">"        { yylval.str = strdup(yytext); return ORDER; }
 "&&"                     return AND;
 "||"                     return OR;
-"+"|"-"                  return ADDSUB;
-"*"|"/"|"%"              return DIVSTAR;
+"+"|"-"                  { yylval.str = strdup(yytext); return ADDSUB; }
+"*"|"/"|"%"              { yylval.str = strdup(yytext); return DIVSTAR; }
 "!"                      return NOT;
 "="                      return '=';
 
@@ -63,15 +64,15 @@ int lineno = 1;
         /* ===================== */
         /* CONSTANTES            */
         /* ===================== */
-[0-9]+                   return NUM;
+[0-9]+                   { yylval.num = atoi(yytext); return NUM; }
 
         /* caractère littéral : 'a', '\n', '\t', '\'' */
-\'(\\[nt\\\']|[^\\'])\'  return CHARACTER;
+\'(\\[nt\\\']|[^\\'])\'  { yylval.str = strdup(yytext); return CHARACTER; }
 
         /* ===================== */
         /* IDENTIFICATEURS       */
         /* ===================== */
-[_a-zA-Z][_a-zA-Z0-9]*   return IDENT;
+[_a-zA-Z][_a-zA-Z0-9]*   { yylval.str = strdup(yytext); return IDENT; }
 
         /* ===================== */
         /* ERREURS LEXICALES     */

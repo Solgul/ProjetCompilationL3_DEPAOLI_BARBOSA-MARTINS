@@ -19,29 +19,30 @@ Node *root = NULL;
 int print_tree = 0;
 %}
 
-%union{
+%union {
     Node* node;
     int num;
     char* str;
 }
 
-/* Priorités (Attention à l'ordre, du plus faible au plus fort) */
+%token <str> IDENT TYPE CHARACTER ADDSUB DIVSTAR EQ ORDER
+%token <num> NUM
+
+%token STRUCT OR AND IF ELSE WHILE RETURN VOID DOT NOT
+
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE
-
 %left OR
 %left AND
 %left EQ
 %left ORDER
 %left ADDSUB
 %left DIVSTAR
-%nonassoc UMINUS NOT /* UMINUS pour le moins unaire si besoin */
+%nonassoc UMINUS NOT
 
-/* Tokens */
-%token <node> ADDSUB DIVSTAR EQ ORDER TYPE STRUCT OR AND IF ELSE WHILE RETURN VOID NUM CHARACTER IDENT DOT NOT
-
-/* Types */
-%type <node> Prog GlobalDecls GlobalDecl DeclStruct ListDeclVars DeclStarts DeclStart Type DeclVars Declarateurs DeclFonct EnTeteFonct Parametres ListTypVar Corps SuiteInstr IdentAffect Instr Exp TB FB M E T F Arguments ListExp
+%type <node> Prog GlobalDecls GlobalDecl DeclStruct ListDeclVars DeclStarts DeclStart 
+%type <node> Type DeclVars Declarateurs DeclFonct EnTeteFonct Parametres ListTypVar 
+%type <node> Corps SuiteInstr IdentAffect Instr Exp TB FB M E T F Arguments ListExp
 
 %%
 
@@ -107,21 +108,28 @@ DeclVars :
 Declarateurs:
     Declarateurs ',' IDENT {
         $$ = $1;
-        addChild($$, makeNode(TR_IDENT));
+        Node *id = makeNode(TR_IDENT); 
+        id->ident = $3;               
+        addChild($$, id);
     }
     | IDENT {
         $$ = makeNode(Declarateurs);
-        addChild($$, makeNode(TR_IDENT));
+        Node *id = makeNode(TR_IDENT);
+        id->ident = $1;                
+        addChild($$, id);
     }
 ;
 
 Type: 
     TYPE {
         $$ = makeNode(TR_TYPE);
+        $$->ident = $1; 
     }
     | STRUCT IDENT {
         $$ = makeNode(TR_STRUCT);
-        addChild($$, makeNode(TR_IDENT));
+        Node *id = makeNode(TR_IDENT);
+        id->ident = $2; 
+        addChild($$, id);
     }
 ;
 
@@ -141,14 +149,17 @@ EnTeteFonct:
     Type IDENT '(' Parametres ')' {
         $$ = makeNode(EnTeteFonct);
         addChild($$, $1);
-        addChild($$, makeNode(TR_IDENT));
+        Node *id = makeNode(TR_IDENT);
+        id->ident = $2; 
+        addChild($$, id);
         addChild($$, $4);
     }
-    |
-    VOID IDENT '(' Parametres ')' {
+    | VOID IDENT '(' Parametres ')' {
         $$ = makeNode(EnTeteFonct);
         addChild($$, makeNode(TR_VOID));
-        addChild($$, makeNode(TR_IDENT));
+        Node *id = makeNode(TR_IDENT);
+        id->ident = $2; 
+        addChild($$, id);
         addChild($$, $4);
     }
 ;
@@ -163,12 +174,16 @@ ListTypVar:
     ListTypVar ',' Type IDENT {
         $$ = $1;
         addChild($$, $3);
-        addChild($$, makeNode(TR_IDENT));
+        Node *id = makeNode(TR_IDENT);
+        id->ident = $4; 
+        addChild($$, id);
     }
     | Type IDENT {
         $$ = makeNode(ListTypVar);
         addChild($$, $1);
-        addChild($$, makeNode(TR_IDENT));
+        Node *id = makeNode(TR_IDENT);
+        id->ident = $2; 
+        addChild($$, id);
     }
 ;
 
@@ -263,10 +278,13 @@ IdentAffect :
     IdentAffect DOT IDENT {
         $$ = makeNode(TR_DOT);
         addChild($$, $1);
-        addChild($$, makeNode(TR_IDENT));
+        Node *id = makeNode(TR_IDENT);
+        id->ident = $3; 
+        addChild($$, id);
     }
     | IDENT {
         $$ = makeNode(TR_IDENT);
+        $$->ident = $1; 
     }
 ;
 
@@ -295,6 +313,7 @@ TB :
 FB :  
     FB EQ M {
         $$ = makeNode(TR_EQ);
+        $$->ident = $2;
         addChild($$, $1);
         addChild($$, $3);
     }
@@ -304,6 +323,7 @@ FB :
 M : 
     M ORDER E {
         $$ = makeNode(TR_ORDER);
+        $$->ident = $2; 
         addChild($$, $1);
         addChild($$, $3);
     }
@@ -313,6 +333,7 @@ M :
 E : 
     E ADDSUB T {
         $$ = makeNode(TR_ADDSUB);
+        $$->ident = $2;
         addChild($$, $1);
         addChild($$, $3);
     }
@@ -322,6 +343,7 @@ E :
 T : 
     T DIVSTAR F {
         $$ = makeNode(TR_DIVSTAR);
+        $$->ident = $2;
         addChild($$, $1);
         addChild($$, $3);
     }
@@ -329,21 +351,19 @@ T :
 ;
 
 F : 
-    ADDSUB F {
-        /* Moins unaire ou Plus unaire */
-        $$ = makeNode(TR_ADDSUB);
-        addChild($$, $2);
+    '(' Exp ')' { $$ = $2; }
+    | NUM { 
+        $$ = makeNode(TR_NUM); 
+        $$->num = $1; 
     }
-    | NOT F {
-        $$ = makeNode(TR_NOT);
-        addChild($$, $2);
+    | CHARACTER { 
+        $$ = makeNode(TR_CHARACTER);
+        $$->ident = $1; 
     }
-    | '(' Exp ')' { $$ = $2; }
-    | NUM { $$ = makeNode(TR_NUM); }
-    | CHARACTER { $$ = makeNode(TR_CHARACTER); }
     | IdentAffect { $$ = $1; }
     | IDENT '(' Arguments  ')' {
         $$ = makeNode(TR_IDENT);
+        $$->ident = $1;
         addChild($$, $3);
     }
 ;
