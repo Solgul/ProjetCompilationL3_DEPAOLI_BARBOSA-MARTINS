@@ -8,11 +8,10 @@
 int yylex();
 extern int lineno;
 extern FILE *yyin;
-extern char *yytext; // Utile pour voir sur quel mot ça plante
+extern char *yytext;
 
 void yyerror(const char *s) {
-    fprintf(stderr, "Erreur syntaxique ligne %d : %s\n",
-            lineno, s);
+    fprintf(stderr, "Erreur syntaxique ligne %d : %s\n", lineno, s);
 }
 
 Node *root = NULL;
@@ -60,11 +59,15 @@ Prog :
 
 GlobalDecls :
     GlobalDecls GlobalDecl {
-        $$ = $1;
-        addChild($$, $2);
+        if ($1 == NULL) {
+            $$ = $2;
+        } else {
+            $$ = $1;
+            addSibling($$, $2);
+        }
     }
-    | /* vide */ {
-        $$ = makeNode(DeclStarts);
+    |{
+        $$ = NULL;
     }
 ;
 
@@ -75,32 +78,35 @@ GlobalDecl :
 ;
 
 /* ========================================================================= */
-/* DÉCLARATIONS                                                              */
+/* DÉCLARATIONS (Variables et Structures)                                    */
 /* ========================================================================= */
 
 DeclStruct:
     STRUCT IDENT '{' ListDeclVars '}' ';' {
         $$ = makeNode(DeclStruct);
-        addChild($$, makeNode(TR_STRUCT));
-        addChild($$, makeNode(TR_IDENT));
+        $$->ident = $2;
         if ($4 != NULL) addChild($$, $4);
     }
 ;
 
 ListDeclVars:
     ListDeclVars DeclVars {
-        $$ = $1;
-        addChild($$, $2);
+        if ($1 == NULL) {
+            $$ = makeNode(DeclVars);
+            addChild($$, $2);
+        } else {
+            $$ = $1;
+            addChild($$, $2);
+        }
     }
-    | /* vide */ {
+    |{
         $$ = makeNode(DeclVars);
     }
 ;
 
 DeclVars : 
     Type Declarateurs ';' {
-        $$ = makeNode(DeclVars);
-        addChild($$, $1);
+        $$ = $1;
         addChild($$, $2);
     }
 ;
@@ -108,28 +114,24 @@ DeclVars :
 Declarateurs:
     Declarateurs ',' IDENT {
         $$ = $1;
-        Node *id = makeNode(TR_IDENT); 
+        Node *id = makeNode(Ident); 
         id->ident = $3;               
-        addChild($$, id);
+        addSibling($$, id);
     }
     | IDENT {
-        $$ = makeNode(Declarateurs);
-        Node *id = makeNode(TR_IDENT);
-        id->ident = $1;                
-        addChild($$, id);
+        $$ = makeNode(Ident);
+        $$->ident = $1;
     }
 ;
 
 Type: 
     TYPE {
-        $$ = makeNode(TR_TYPE);
+        $$ = makeNode(Type);
         $$->ident = $1; 
     }
     | STRUCT IDENT {
-        $$ = makeNode(TR_STRUCT);
-        Node *id = makeNode(TR_IDENT);
-        id->ident = $2; 
-        addChild($$, id);
+        $$ = makeNode(Struct);
+        $$->ident = $2; 
     }
 ;
 
@@ -141,7 +143,7 @@ DeclFonct:
     EnTeteFonct Corps {
         $$ = makeNode(DeclFonct);
         addChild($$, $1);
-        addChild($$, $2);
+        if ($2 != NULL) addChild($$, $2);
     }
 ;
 
@@ -149,39 +151,45 @@ EnTeteFonct:
     Type IDENT '(' Parametres ')' {
         $$ = makeNode(EnTeteFonct);
         addChild($$, $1);
-        Node *id = makeNode(TR_IDENT);
+        Node *id = makeNode(Ident);
         id->ident = $2; 
         addChild($$, id);
-        addChild($$, $4);
+        
+        Node *var = makeNode(Var);
+        addChild(var, $4);
+        addChild($$, var);
     }
     | VOID IDENT '(' Parametres ')' {
         $$ = makeNode(EnTeteFonct);
-        addChild($$, makeNode(TR_VOID));
-        Node *id = makeNode(TR_IDENT);
+        addChild($$, makeNode(Void));
+        Node *id = makeNode(Ident);
         id->ident = $2; 
         addChild($$, id);
-        addChild($$, $4);
+        
+        Node *var = makeNode(Var);
+        addChild(var, $4);
+        addChild($$, var);
     }
 ;
 
 Parametres:
-    VOID { $$ = makeNode(TR_VOID); }
+    VOID { $$ = makeNode(Void); }
     | ListTypVar { $$ = $1; }
-    | /* vide */ { $$ = makeNode(TR_VOID); }
+    |{ $$ = makeNode(Void); }
 ;
 
 ListTypVar:
     ListTypVar ',' Type IDENT {
         $$ = $1;
-        addChild($$, $3);
-        Node *id = makeNode(TR_IDENT);
+        Node* t = $3;
+        Node *id = makeNode(Ident);
         id->ident = $4; 
-        addChild($$, id);
+        addChild(t, id);
+        addSibling($$, t);
     }
     | Type IDENT {
-        $$ = makeNode(ListTypVar);
-        addChild($$, $1);
-        Node *id = makeNode(TR_IDENT);
+        $$ = $1;
+        Node *id = makeNode(Ident);
         id->ident = $2; 
         addChild($$, id);
     }
@@ -189,20 +197,25 @@ ListTypVar:
 
 Corps:
     '{' DeclStarts SuiteInstr '}' {
-        $$ = makeNode(Corps);
-        /* L'ordre est strict : Déclarations PUIS Instructions */
-        if($2 != NULL) addChild($$, $2);
-        if($3 != NULL) addChild($$, $3);
+        $$ = $2;
+        Node* instr = makeNode(Instr);
+        addSibling($$, instr);
+        if ($3 != NULL) addChild(instr, $3);
     }
 ;
 
 DeclStarts: 
     DeclStarts DeclStart {
-        $$ = $1;
-        addChild($$, $2);
+        if ($1 == NULL) {
+            $$ = makeNode(DeclVars);
+            addChild($$, $2);
+        } else {
+            $$ = $1;
+            addChild($$, $2);
+        }
     }
-    | /* vide */ {
-        $$ = NULL; 
+    |{
+        $$ = makeNode(DeclVars);
     }
 ;
 
@@ -217,73 +230,97 @@ DeclStart:
 
 SuiteInstr:
     SuiteInstr Instr {
-        $$ = $1;
-        addChild($$, $2);
+        if ($1 != NULL) {
+            $$ = $1;
+            addSibling($$, $2);
+        } else {
+            $$ = $2;
+        }
     }
-    | /* vide */ { 
-        /* CHANGE : Permettre un corps de fonction sans instructions */
-        $$ = NULL; 
+    |{ 
+        $$ = NULL;
     }
 ;
 
 Instr:
     IdentAffect '=' Exp ';' {
-        $$ = makeNode(IdentAffect);
-        addChild($$, $1);
+        $$ = makeNode(Affect);
+        if ($1->label == Ident) {
+            $$->ident = $1->ident;
+            free($1);
+        } else {
+            addChild($$, $1);
+        }
         addChild($$, $3);
     }
     | IF '(' Exp ')' Instr %prec LOWER_THAN_ELSE {
-        $$ = makeNode(TR_IF);
-        addChild($$, $3);
-        addChild($$, $5);
+        $$ = makeNode(If);
+        Node* cond = makeNode(Cond);
+        addChild(cond, $3);
+        addChild($$, cond);
+        if ($5 != NULL) {
+            Node* doo = makeNode(Do);
+            addChild(doo, $5);
+            addChild($$, doo);
+        }
     }
     | IF '(' Exp ')' Instr ELSE Instr {
-        Node* tr_else;
-        $$ = makeNode(TR_IF);
-        addChild($$, $3);    
-        addChild($$, $5);    
-        
-        tr_else = makeNode(TR_ELSE);
-        addChild($$, tr_else); 
-        addChild(tr_else, $7); 
+        $$ = makeNode(If);
+        Node* cond = makeNode(Cond);
+        addChild(cond, $3);
+        addChild($$, cond);
+        if ($5 != NULL) {
+            Node* doo = makeNode(Do);
+            addChild(doo, $5);
+            addChild($$, doo);
+        }
+        if ($7 != NULL) {
+            Node* elsee = makeNode(Else);
+            addChild(elsee, $7);
+            addChild($$, elsee);
+        }
     }
     | WHILE '(' Exp ')' Instr {
-        $$ = makeNode(TR_WHILE);
-        addChild($$, $3);
-        addChild($$, $5);
+        $$ = makeNode(While);
+        Node* cond = makeNode(Cond);
+        addChild(cond, $3);
+        addChild($$, cond);
+        if ($5 != NULL) {
+            Node* doo = makeNode(Do);
+            addChild(doo, $5);
+            addChild($$, doo);
+        }
     }
-    | IDENT '(' Arguments  ')' ';' {
-        $$ = makeNode(Instr);
-        addChild($$, makeNode(TR_IDENT));
-        addChild($$, $3 ? $3 : makeNode(Arguments));
+    | IDENT '(' Arguments ')' ';' {
+        $$ = makeNode(Funct);
+        $$->ident = $1;
+        if ($3 != NULL) addChild($$, $3);
     }
     | RETURN Exp ';' {
-        $$ = makeNode(TR_RETURN);
+        $$ = makeNode(Return);
         addChild($$, $2);
     }
     | RETURN ';' {
-        $$ = makeNode(TR_RETURN);
+        $$ = makeNode(Return);
     }
     | '{' SuiteInstr '}' {
-        $$ = makeNode(Instr);
-        if($2 != NULL) addChild($$, $2);
+        $$ = $2;
     }
     | ';' {
-        /* Instruction vide */
-        $$ = makeNode(Instr);
+        $$ = NULL;
     }
 ;
 
 IdentAffect :
     IdentAffect DOT IDENT {
-        $$ = makeNode(TR_DOT);
+        $$ = makeNode(Dot);
         addChild($$, $1);
-        Node *id = makeNode(TR_IDENT);
+        Node *id = makeNode(Ident);
         id->ident = $3; 
         addChild($$, id);
     }
     | IDENT {
-        $$ = makeNode(TR_IDENT);
+        $$ = makeNode(Ident);
         $$->ident = $1; 
     }
 ;
@@ -294,7 +331,7 @@ IdentAffect :
 
 Exp :  
     Exp OR TB {
-        $$ = makeNode(TR_OR);
+        $$ = makeNode(Or);
         addChild($$, $1);
         addChild($$, $3);
     }
@@ -303,7 +340,7 @@ Exp :
 
 TB :
     TB AND FB {
-        $$ = makeNode(TR_AND);
+        $$ = makeNode(And);
         addChild($$, $1);
         addChild($$, $3);
     }
@@ -312,7 +349,7 @@ TB :
 
 FB :  
     FB EQ M {
-        $$ = makeNode(TR_EQ);
+        $$ = makeNode(Equal);
         $$->ident = $2;
         addChild($$, $1);
         addChild($$, $3);
@@ -322,7 +359,7 @@ FB :
 
 M : 
     M ORDER E {
-        $$ = makeNode(TR_ORDER);
+        $$ = makeNode(Order);
         $$->ident = $2; 
         addChild($$, $1);
         addChild($$, $3);
@@ -332,7 +369,7 @@ M :
 
 E : 
     E ADDSUB T {
-        $$ = makeNode(TR_ADDSUB);
+        $$ = makeNode(BiOperator);
         $$->ident = $2;
         addChild($$, $1);
         addChild($$, $3);
@@ -342,7 +379,7 @@ E :
 
 T : 
     T DIVSTAR F {
-        $$ = makeNode(TR_DIVSTAR);
+        $$ = makeNode(BiOperator);
         $$->ident = $2;
         addChild($$, $1);
         addChild($$, $3);
@@ -351,36 +388,44 @@ T :
 ;
 
 F : 
-    '(' Exp ')' { $$ = $2; }
+    ADDSUB F {
+        $$ = makeNode(UnOperator);
+        $$->ident = $1;
+        addChild($$, $2);
+    }
+    | NOT F {
+        $$ = makeNode(Negate);
+        addChild($$, $2);
+    }
+    | '(' Exp ')' { $$ = $2; }
     | NUM { 
-        $$ = makeNode(TR_NUM); 
-        $$->num = $1; 
+        $$ = makeNode(Num); 
+        $$->num = $1;
     }
     | CHARACTER { 
-        $$ = makeNode(TR_CHARACTER);
+        $$ = makeNode(Char);
         $$->ident = $1; 
     }
     | IdentAffect { $$ = $1; }
-    | IDENT '(' Arguments  ')' {
-        $$ = makeNode(TR_IDENT);
+    | IDENT '(' Arguments ')' {
+        $$ = makeNode(Funct);
         $$->ident = $1;
-        addChild($$, $3);
+        if ($3 != NULL) addChild($$, $3);
     }
 ;
 
 Arguments:
     ListExp { $$ = $1; }
-    | /* vide */ { $$ = makeNode(Arguments); }
+    |{ $$ = NULL; }
 ;
 
 ListExp:
     ListExp ',' Exp {
         $$ = $1;
-        addChild($$, $3);
+        addSibling($$, $3);
     }
     | Exp {
-        $$ = makeNode(ListExp);
-        addChild($$, $1);
+        $$ = $1;
     }
 ;
 
