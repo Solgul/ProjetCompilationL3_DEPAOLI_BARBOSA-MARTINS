@@ -369,7 +369,7 @@ M :
 
 E : 
     E ADDSUB T {
-        $$ = makeNode(BiOperator);
+        $$ = makeNode(Addsub);
         $$->ident = $2;
         addChild($$, $1);
         addChild($$, $3);
@@ -379,7 +379,7 @@ E :
 
 T : 
     T DIVSTAR F {
-        $$ = makeNode(BiOperator);
+        $$ = makeNode(Divstar);
         $$->ident = $2;
         addChild($$, $1);
         addChild($$, $3);

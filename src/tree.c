@@ -1,5 +1,4 @@
 /* tree.c */
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "tree.h"
@@ -21,7 +20,8 @@ static const char *StringFromLabel[] = {
     "Return", 
     "Affect", 
     "UnOperator", 
-    "BiOperator", 
+    "Addsub", 
+    "Divstar", 
     "Negate", 
     "Order", 
     "Equal", 
@@ -81,7 +81,7 @@ void deleteTree(Node *node) {
 }
 
 void printTree(Node *node) {
-    static bool rightmost[128];
+    static int rightmost[128];
     static int depth = 0;
     for (int i = 1; i < depth; i++) {
         printf(rightmost[i] ? "    " : "\u2502   ");
@@ -89,11 +89,10 @@ void printTree(Node *node) {
     if (depth > 0) {
         printf(rightmost[depth] ? "\u2514\u2500\u2500 " : "\u251c\u2500\u2500 ");
     }
-    
     printf("%s", StringFromLabel[node->label]);
     if (node->label == Ident || node->label == Type || node->label == Affect || 
-        node->label == BiOperator || node->label == Funct || node->label == Equal || 
-        node->label == Order || node->label == Struct || node->label == DeclStruct) {
+        node->label == Addsub || node->label == Divstar || node->label == Funct || 
+        node->label == Equal || node->label == Order || node->label == Struct || node->label == DeclStruct) {
         if (node->ident != NULL) printf(": %s", node->ident);
     } else if (node->label == Num) {
         printf(": %d", node->num);
@@ -101,7 +100,7 @@ void printTree(Node *node) {
     printf("\n");
     depth++;
     for (Node *child = node->firstChild; child != NULL; child = child->nextSibling) {
-        rightmost[depth] = (child->nextSibling) ? false : true;
+        rightmost[depth] = (child->nextSibling) ? 0 : 1; 
         printTree(child);
     }
     depth--;
