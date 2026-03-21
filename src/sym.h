@@ -23,15 +23,18 @@ typedef enum {
 typedef struct Struct {
     char * name;
     struct Symbol * champs;
+    int nbChamp; //le nombre de champs de la structure
 } Struct;
 
 typedef struct Symbol {
     char* ident;
     SymbolDataType type;
     SymbolType use;
-    Struct * nameStruct;
+    int lineno;
     int isStatic; //1 if static, 0 if not
-    struct SymbolTable * child;
+    char* identFunc; //identifient de la fonction d'origine
+    Struct * nameStruct;
+    struct SymbolTable * child; //????
 } Symbol;
 
 typedef struct SymbolTable {
