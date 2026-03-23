@@ -1,3 +1,6 @@
+#ifndef TREE_H
+#define TREE_H
+
 /* tree.h */
 
 typedef enum {
@@ -51,3 +54,5 @@ void printTree(Node *node);
 #define FIRSTCHILD(node) node->firstChild
 #define SECONDCHILD(node) node->firstChild->nextSibling
 #define THIRDCHILD(node) node->firstChild->nextSibling->nextSibling
+
+#endif /* TREE_H */

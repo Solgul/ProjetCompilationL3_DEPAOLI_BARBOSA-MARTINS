@@ -15,16 +15,23 @@ EXEC = $(BINARY)/tpcas
 
 all : clean $(EXEC)
 
-$(EXEC) : $(OBJ)/$(LEXER).o $(OBJ)/$(PARSER).o $(OBJ)/tree.o 
+$(EXEC) : $(OBJ)/$(LEXER).o $(OBJ)/$(PARSER).o $(OBJ)/tree.o $(OBJ)/sym.o 
 	@mkdir -p $(BINARY)
 	$(CC) -o $@ $^
 
 $(OBJ)/tree.o : $(SOURCE)/tree.c $(SOURCE)/tree.h
+	@mkdir -p $(OBJ)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
-$(OBJ)/$(PARSER).o: $(OBJ)/$(PARSER).c $(SOURCE)/tree.h 
+$(OBJ)/sym.o : $(SOURCE)/sym.c $(SOURCE)/sym.h $(SOURCE)/tree.h
+	@mkdir -p $(OBJ)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+$(OBJ)/$(PARSER).o: $(OBJ)/$(PARSER).c $(SOURCE)/tree.h $(SOURCE)/sym.h
+	@mkdir -p $(OBJ)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
 $(OBJ)/$(LEXER).o: $(OBJ)/$(LEXER).c $(OBJ)/$(PARSER).h 
-
-$(OBJ)/%.o : $(SOURCE)/%.c
 	@mkdir -p $(OBJ)
 	$(CC) -c -o $@ $< $(CFLAGS)
 

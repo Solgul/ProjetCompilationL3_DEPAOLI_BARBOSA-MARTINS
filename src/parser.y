@@ -4,12 +4,12 @@
 #include <unistd.h>
 #include <getopt.h>
 #include "tree.h"
+#include "sym.h"
 
 int yylex();
 extern int lineno;
 extern FILE *yyin;
 extern char *yytext;
-
 void yyerror(const char *s) {
     fprintf(stderr, "Erreur syntaxique ligne %d : %s\n", lineno, s);
 }
@@ -127,7 +127,7 @@ Declarateurs:
 Type: 
     TYPE {
         $$ = makeNode(Type);
-        $$->ident = $1; 
+        $$->ident = $1;
     }
     | STRUCT IDENT {
         $$ = makeNode(Struct);
@@ -190,7 +190,7 @@ ListTypVar:
     | Type IDENT {
         $$ = $1;
         Node *id = makeNode(Ident);
-        id->ident = $2; 
+        id->ident = $2;
         addChild($$, id);
     }
 ;
@@ -486,6 +486,12 @@ int main(int argc, char **argv){
         if (opt == 1) {
             printTree(root);
         }
+        
+        /* NOUVEAU : Création et affichage de la table des symboles */
+        SymbolTable *globalTable = buildSymbolTable(root);
+        printf("\n=== TABLE DES SYMBOLES GLOBALE ===\n");
+        printSymbolTable(globalTable, 0);
+        
         deleteTree(root);
     }
     

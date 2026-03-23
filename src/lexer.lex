@@ -2,11 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "tree.h"
-#include "../obj/parser.h"   /* tokens Bison */
+#include "../obj/parser.h"
 int lineno = 1;
 %}
 
-/* état pour les commentaires multi-lignes */
 %x COMM
 
 %option noyywrap
@@ -23,9 +22,8 @@ int lineno = 1;
         /* ===================== */
         /* COMMENTAIRES          */
         /* ===================== */
-"//".*                   ;              /* commentaire ligne */
+"//".* ;
 "/*"                     BEGIN(COMM);
-
 <COMM>"*/"               BEGIN(INITIAL);
 <COMM>.|\n               ;
 
@@ -38,6 +36,7 @@ int lineno = 1;
 "while"                  return WHILE;
 "int"|"char"             { yylval.str = strdup(yytext); return TYPE; }
 "void"                   return VOID;
+"struct"                 return STRUCT;
 
         /* ===================== */
         /* OPÉRATEURS            */
@@ -56,6 +55,7 @@ int lineno = 1;
         /* ===================== */
 ";"                      return ';';
 ","                      return ',';
+"."                      return DOT;
 "("                      return '(';
 ")"                      return ')';
 "{"                      return '{';
@@ -66,20 +66,17 @@ int lineno = 1;
         /* ===================== */
 [0-9]+                   { yylval.num = atoi(yytext); return NUM; }
 
-        /* caractère littéral : 'a', '\n', '\t', '\'' */
 \'(\\[nt\\\']|[^\\'])\'  { yylval.str = strdup(yytext); return CHARACTER; }
 
         /* ===================== */
         /* IDENTIFICATEURS       */
         /* ===================== */
-[_a-zA-Z][_a-zA-Z0-9]*   { yylval.str = strdup(yytext); return IDENT; }
+[_a-zA-Z][_a-zA-Z0-9]* { yylval.str = strdup(yytext); return IDENT; }
 
         /* ===================== */
         /* ERREURS LEXICALES     */
         /* ===================== */
 . {
-    fprintf(stderr,
-        "Erreur lexicale ligne %d : caractère invalide '%s'\n",
-        lineno, yytext);
+    fprintf(stderr, "Erreur lexicale ligne %d : caractère invalide '%s'\n", lineno, yytext);
 }
 %%
