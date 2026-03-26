@@ -16,7 +16,7 @@ void parcours_depart(Node * root, FILE * file) {
         Node * ident = type->nextSibling;
         if(!strcmp(ident->ident, "main")) {
             fprintf(file, "global _start\nsection .text\n_start :\n");
-            parcours_reste(root, file);
+            fprintf(file, "call main\n");
             fprintf(file, "mov rax, 60\nmov rdi, 0\nsyscall");
         }
     } else {
