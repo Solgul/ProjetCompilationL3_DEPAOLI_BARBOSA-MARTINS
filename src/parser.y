@@ -5,6 +5,7 @@
 #include <getopt.h>
 #include "tree.h"
 #include "sym.h"
+#include "asm.h"
 
 int yylex();
 extern int lineno;
@@ -480,9 +481,20 @@ int main(int argc, char **argv){
         return 1;
     }
 
+    
+
     int res = yyparse();
     
     if (res == 0 && root != NULL) {
+        FILE * file = fopen("asm/_anonymous.asm", "w+");
+        
+        if (!file) {
+            fprintf(stderr, "Couldn't create the .asm file\n");
+            return -1; //a verif
+        }
+        
+        parcours_pour_fonction(root);
+
         if (opt == 1) {
             printTree(root);
         }
@@ -493,7 +505,9 @@ int main(int argc, char **argv){
         printSymbolTable(globalTable, 0);
         
         deleteTree(root);
+        fclose(file);
     }
+    
     
     if(yyin != stdin){
         fclose(yyin);
