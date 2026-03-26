@@ -493,7 +493,7 @@ int main(int argc, char **argv){
             return -1; //a verif
         }
         
-        parcours_pour_fonction(root);
+        parcours_pour_fonction(root, file);
 
         if (opt == 1) {
             printTree(root);
