@@ -10,6 +10,6 @@
  * @param root 
  * @param file
  */
-void parcours_pour_fonction(Node * root, FILE * file);
+void parcours_depart(Node * root, FILE * file);
 
 #endif
