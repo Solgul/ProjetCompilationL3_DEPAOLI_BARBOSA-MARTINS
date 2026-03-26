@@ -21,7 +21,7 @@ void parcours_depart(Node * root, FILE * file) {
         }
     } else {
         for (Node *child = root->firstChild; child != NULL; child = child->nextSibling) {
-            parcours_pour_fonction(child, file);
+            parcours_depart(child, file);
         }
     }
 }
