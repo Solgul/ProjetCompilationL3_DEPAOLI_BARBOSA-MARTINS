@@ -1,3 +1,10 @@
-int main(void){
-    return 15 + 20 - 5;
+int main(void) {
+    char my_char;
+    int count;
+    
+    count = 10;
+    my_char = count; // Doit déclencher un Avertissement (Ex 2)
+    
+    b = 5;           // Doit déclencher une Erreur (variable non déclarée) (Ex 1)
+    return 0;
 }

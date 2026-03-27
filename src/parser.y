@@ -481,34 +481,27 @@ int main(int argc, char **argv){
         return 1;
     }
 
-    
-
     int res = yyparse();
     
     if (res == 0 && root != NULL) {
         FILE * file = fopen("asm/_anonymous.asm", "w+");
-        
         if (!file) {
             fprintf(stderr, "Couldn't create the .asm file\n");
-            return -1; //a verif
+            return -1;
         }
-        
         parcours_depart(root, file);
-
         if (opt == 1) {
             printTree(root);
         }
-        
-        /* NOUVEAU : Création et affichage de la table des symboles */
         SymbolTable *globalTable = buildSymbolTable(root);
-        printf("\n=== TABLE DES SYMBOLES GLOBALE ===\n");
-        printSymbolTable(globalTable, 0);
         
+        int semErrors = checkSemantics(root, globalTable);
+        if (semErrors > 0) {
+            res = 2;
+        }
         deleteTree(root);
         fclose(file);
     }
-    
-    
     if(yyin != stdin){
         fclose(yyin);
     }

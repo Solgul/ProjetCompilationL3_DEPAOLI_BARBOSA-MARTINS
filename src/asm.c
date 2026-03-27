@@ -53,3 +53,4 @@ void parcours_depart(Node * root, FILE * file) {
         }
     }
 }
+

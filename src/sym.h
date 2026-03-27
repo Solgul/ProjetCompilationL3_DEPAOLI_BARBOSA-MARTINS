@@ -51,5 +51,9 @@ int findSymbol(SymbolTable *st, char *ident);
 int addSymbol(SymbolTable *st, char *ident, SymbolDataType type, SymbolType use, int lineno);
 SymbolTable* buildSymbolTable(Node *root);
 void printSymbolTable(SymbolTable *st, int indent);
+Symbol* lookupSymbol(SymbolTable *globalSt, SymbolTable *localSt, char *ident);
+SymbolDataType getExpType(Node *exp, SymbolTable *globalSt, SymbolTable *localSt);
+void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *localSt, int *semErrors);
+int checkSemantics(Node *root, SymbolTable *globalSt);
 
 #endif
