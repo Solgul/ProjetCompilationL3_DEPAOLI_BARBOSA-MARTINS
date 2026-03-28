@@ -2,6 +2,7 @@
 #define ASM
 
 #include "tree.h"
+#include "sym.h"
 #include <stdio.h>
 
 /**
@@ -10,6 +11,7 @@
  * @param root 
  * @param file
  */
-void parcours_depart(Node * root, FILE * file);
+void parcours_depart(Node * root, FILE * file, SymbolTable * globalSt);
+static void parcours_reste(Node * root, FILE * file, SymbolTable * globalSt);
 
 #endif

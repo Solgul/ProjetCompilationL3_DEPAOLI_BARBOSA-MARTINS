@@ -484,23 +484,22 @@ int main(int argc, char **argv){
     int res = yyparse();
     
     if (res == 0 && root != NULL) {
+        if (opt == 1) {
+            printTree(root);
+        }
+        SymbolTable *globalTable = buildSymbolTable(root);
+        int semErrors = checkSemantics(root, globalTable);
+        if (semErrors > 0) {
+            res = 2;
+        }
         FILE * file = fopen("asm/_anonymous.asm", "w+");
         if (!file) {
             fprintf(stderr, "Couldn't create the .asm file\n");
             return -1;
         }
-        parcours_depart(root, file);
-        if (opt == 1) {
-            printTree(root);
-        }
-        SymbolTable *globalTable = buildSymbolTable(root);
-        
-        int semErrors = checkSemantics(root, globalTable);
-        if (semErrors > 0) {
-            res = 2;
-        }
-        deleteTree(root);
+        parcours_depart(root, file, globalTable);
         fclose(file);
+        deleteTree(root);
     }
     if(yyin != stdin){
         fclose(yyin);
