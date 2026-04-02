@@ -488,6 +488,8 @@ int main(int argc, char **argv){
             printTree(root);
         }
         SymbolTable *globalTable = buildSymbolTable(root);
+        printf("\n=== TABLE DES SYMBOLES GLOBALE ===\n");
+        printSymbolTable(globalTable, 0);
         int semErrors = checkSemantics(root, globalTable);
         if (semErrors > 0) {
             res = 2;
