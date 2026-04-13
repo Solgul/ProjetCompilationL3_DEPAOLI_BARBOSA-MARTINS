@@ -21,8 +21,11 @@ create :
 	@mkdir -p $(OBJ)
 	@mkdir -p $(ASM)
 
-$(EXEC) : $(OBJ)/$(LEXER).o $(OBJ)/$(PARSER).o $(OBJ)/tree.o $(OBJ)/asm.o $(OBJ)/sym.o 
+$(EXEC) : $(OBJ)/main.o $(OBJ)/$(LEXER).o $(OBJ)/$(PARSER).o $(OBJ)/tree.o $(OBJ)/asm.o $(OBJ)/sym.o 
 	$(CC) -o $@ $^
+
+$(OBJ)/main.o : $(SOURCE)/main.c $(SOURCE)/tree.h $(SOURCE)/sym.h $(SOURCE)/asm.h
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(OBJ)/tree.o : $(SOURCE)/tree.c $(SOURCE)/tree.h
 	$(CC) -c -o $@ $< $(CFLAGS)

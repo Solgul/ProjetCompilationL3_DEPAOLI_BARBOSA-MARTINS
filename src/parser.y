@@ -4,19 +4,14 @@
 #include <unistd.h>
 #include <getopt.h>
 #include "tree.h"
-#include "sym.h"
-#include "asm.h"
 
 int yylex();
 extern int lineno;
-extern FILE *yyin;
-extern char *yytext;
 void yyerror(const char *s) {
     fprintf(stderr, "Erreur syntaxique ligne %d : %s\n", lineno, s);
 }
 
 Node *root = NULL;
-int print_tree = 0;
 %}
 
 %union {
@@ -258,7 +253,8 @@ Instr:
         $$ = makeNode(If);
         Node* cond = makeNode(Cond);
         addChild(cond, $3);
-        addChild($$, cond);
+        addChild($$, cond);$(EXEC) : $(OBJ)/$(LEXER).o $(OBJ)/$(PARSER).o $(OBJ)/tree.o $(OBJ)/asm.o $(OBJ)/sym.o 
+	$(CC) -o $@ $^
         if ($5 != NULL) {
             Node* doo = makeNode(Do);
             addChild(doo, $5);
@@ -431,81 +427,3 @@ ListExp:
 ;
 
 %%
-
-void print_help(const char *exeName) {
-    printf("Usage: %s [OPTIONS] [FILE.tpc]\n", exeName);
-    printf("Options:\n");
-    printf("  -t, --tree    Affiche l'arbre abstrait sur la sortie standard\n");
-    printf("  -h, --help \n");
-    printf("\n");
-}
-
-int handle_opt(int argc, char *argv[]) {
-    int opt; int val = 0;
-    static struct option long_options[] = {
-        {"tree", no_argument, 0, 't'},
-        {"help", no_argument, 0, 'h'},
-        {0, 0, 0, 0}
-    };
-    while ((opt = getopt_long(argc, argv, "th", long_options, NULL)) != -1) {
-        switch (opt) {
-        case 't':
-            val = 1;
-            break;
-        case 'h':
-            print_help(argv[0]);
-            return 2;
-        default:
-            fprintf(stderr, "Option incorrecte.\n");
-            print_help(argv[0]);
-            return 3;
-        }
-    }
-
-    if(optind < argc){
-        FILE *f = fopen(argv[optind], "r");
-        if(!f){
-            fprintf(stderr, "votre fichier est invalide");
-            return 2;
-        }
-        yyin = f;
-    }
-
-    return val;
-}
-
-int main(int argc, char **argv){
-    yyin = stdin;
-    int opt = handle_opt(argc, argv);
-    if(opt == 2){ //help or error
-        return 1;
-    }
-
-    int res = yyparse();
-    
-    if (res == 0 && root != NULL) {
-        if (opt == 1) {
-            printTree(root);
-        }
-        SymbolTable *globalTable = buildSymbolTable(root);
-        printf("\n=== TABLE DES SYMBOLES GLOBALE ===\n");
-        printSymbolTable(globalTable, 0);
-        int semErrors = checkSemantics(root, globalTable);
-        if (semErrors > 0) {
-            res = 2;
-        }
-        FILE * file = fopen("asm/_anonymous.asm", "w+");
-        if (!file) {
-            fprintf(stderr, "Couldn't create the .asm file\n");
-            return -1;
-        }
-        parcours_depart(root, file, globalTable);
-        fclose(file);
-        deleteTree(root);
-    }
-    if(yyin != stdin){
-        fclose(yyin);
-    }
-
-    return res;
-}
