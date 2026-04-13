@@ -253,8 +253,7 @@ Instr:
         $$ = makeNode(If);
         Node* cond = makeNode(Cond);
         addChild(cond, $3);
-        addChild($$, cond);$(EXEC) : $(OBJ)/$(LEXER).o $(OBJ)/$(PARSER).o $(OBJ)/tree.o $(OBJ)/asm.o $(OBJ)/sym.o 
-	$(CC) -o $@ $^
+        addChild($$, cond);
         if ($5 != NULL) {
             Node* doo = makeNode(Do);
             addChild(doo, $5);
