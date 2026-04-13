@@ -3,7 +3,10 @@
 #include <string.h>
 #include "tree.h"
 #include "../obj/parser.h"
+
 int lineno = 1;
+int colno = 1;
+#define YY_USER_ACTION colno += yyleng;
 %}
 
 %x COMM
@@ -17,7 +20,7 @@ int lineno = 1;
         /* ESPACES ET RETOURS   */
         /* ===================== */
 [ \t\r]+                 ;
-\n                       { lineno++; }
+\n                       { lineno++; colno = 1; }
 
         /* ===================== */
         /* COMMENTAIRES          */
@@ -77,6 +80,6 @@ int lineno = 1;
         /* ERREURS LEXICALES     */
         /* ===================== */
 . {
-    fprintf(stderr, "Erreur lexicale ligne %d : caractère invalide '%s'\n", lineno, yytext);
+    fprintf(stderr, "Erreur lexicale ligne %d, colonne %d : caractère invalide '%s'\n", lineno, colno, yytext);
 }
 %%

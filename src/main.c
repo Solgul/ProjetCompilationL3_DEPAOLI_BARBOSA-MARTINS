@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <getopt.h>
+#include <string.h>
 #include "tree.h"
 #include "sym.h"
 #include "asm.h"
@@ -80,15 +81,32 @@ int main(int argc, char **argv){
         if (semErrors > 0) {
             res = 2;
         }
-        FILE * file = fopen("asm/_anonymous.asm", "w+");
+        char *out_filename = "asm/_anonymous.asm";
+        char temp_filename[512];
+        if (input_filename != NULL) {
+            char *base_name = strrchr(input_filename, '/');
+            if (base_name != NULL) {
+                base_name++;
+            } else {
+                base_name = input_filename;
+            }
+            snprintf(temp_filename, 512, "asm/%s", base_name);
+            char *dot = strrchr(temp_filename, '.');
+            if (dot != NULL && strcmp(dot, ".tpc") == 0) {
+                strcpy(dot, ".asm");
+            } else {
+                strcat(temp_filename, ".asm");
+            }
+            out_filename = temp_filename;
+        }
+        FILE * file = fopen(out_filename, "w+");
         if (!file) {
-            fprintf(stderr, "Erreur : Impossible de créer le fichier .asm\n");
+            fprintf(stderr, "Erreur : Impossible de créer le fichier %s\n", out_filename);
+            deleteTree(root);
             return -1;
         }
         parcours_depart(root, file, globalTable);
         fclose(file);
-        
-        deleteTree(root);
     }
     if(yyin != stdin){
         fclose(yyin);

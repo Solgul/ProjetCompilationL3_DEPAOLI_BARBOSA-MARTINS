@@ -7,8 +7,9 @@
 
 int yylex();
 extern int lineno;
+extern int colno;
 void yyerror(const char *s) {
-    fprintf(stderr, "Erreur syntaxique ligne %d : %s\n", lineno, s);
+    fprintf(stderr, "Erreur syntaxique ligne %d, colonne %d : %s\n", lineno, colno, s);
 }
 
 Node *root = NULL;
