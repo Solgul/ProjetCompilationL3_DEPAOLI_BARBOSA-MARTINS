@@ -66,6 +66,33 @@ static void parcours_reste(Node * root, FILE * file, SymbolTable * globalSt) {
             fprintf(file, "    call putchar\n");
         }
     }
+    else if (root->label == If) {
+        static int if_count = 0;
+        int current_if = if_count++;
+        Node *condNode = root->firstChild;
+        Node *doNode = condNode->nextSibling;
+        Node *elseNode = doNode ? doNode->nextSibling : NULL;
+        parcours_reste(condNode, file, globalSt);
+        fprintf(file, "    pop rax\n");
+        fprintf(file, "    cmp rax, 0\n");
+        if (elseNode) {
+            fprintf(file, "    je .L_else_%d\n", current_if);
+        } else {
+            fprintf(file, "    je .L_end_if_%d\n", current_if);
+        }
+        parcours_reste(doNode, file, globalSt);
+        if (elseNode) {
+            fprintf(file, "    jmp .L_end_if_%d\n", current_if);
+            fprintf(file, ".L_else_%d:\n", current_if);
+            parcours_reste(elseNode, file, globalSt);
+        }
+        fprintf(file, ".L_end_if_%d:\n", current_if);
+    }
+    else if (root->label == Cond || root->label == Do || root->label == Else) {
+        for (Node *child = root->firstChild; child != NULL; child = child->nextSibling) {
+            parcours_reste(child, file, globalSt);
+        }
+    }
     else {
         for (Node *child = root->firstChild; child != NULL; child = child->nextSibling) {
             parcours_reste(child, file, globalSt);
