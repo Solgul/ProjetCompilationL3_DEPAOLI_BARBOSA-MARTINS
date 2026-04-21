@@ -45,12 +45,14 @@ typedef struct SymbolTable {
 
 /**
  * @brief Alloue et initialise une nouvelle table des symboles vide.
+ * 
  * @return SymbolTable* Un pointeur vers la nouvelle table des symboles.
  */
 SymbolTable* createSymbolTable();
 
 /**
  * @brief Cherche un identificateur spécifique dans une table des symboles donnée.
+ * 
  * @param st Un pointeur vers la table des symboles dans laquelle chercher.
  * @param ident La chaîne de caractères représentant l'identificateur recherché.
  * @return int L'index du symbole dans la table s'il est trouvé, -1 sinon.
@@ -59,6 +61,7 @@ int findSymbol(SymbolTable *st, char *ident);
 
 /**
  * @brief Ajoute un nouveau symbole dans la table des symboles s'il n'existe pas déjà.
+ * 
  * @param st Un pointeur vers la table des symboles.
  * @param ident Le nom de l'identificateur.
  * @param type Le type de données du symbole (int, char, void, struct).
@@ -70,6 +73,7 @@ int addSymbol(SymbolTable *st, char *ident, SymbolDataType type, SymbolType use,
 
 /**
  * @brief Parcourt l'arbre syntaxique abstrait pour construire la table des symboles globale et les tables locales.
+ * 
  * @param root Le noeud racine de l'arbre (généralement le noeud Prog).
  * @return SymbolTable* Un pointeur vers la table des symboles globale construite.
  */
@@ -77,6 +81,7 @@ SymbolTable* buildSymbolTable(Node *root);
 
 /**
  * @brief Affiche le contenu d'une table des symboles de manière lisible.
+ * 
  * @param st Un pointeur vers la table des symboles à afficher.
  * @param indent Le niveau d'indentation pour l'affichage.
  */
@@ -84,6 +89,7 @@ void printSymbolTable(SymbolTable *st, int indent);
 
 /**
  * @brief Recherche un symbole en regardant d'abord dans la table locale, puis dans la table globale.
+ * 
  * @param globalSt La table des symboles globale.
  * @param localSt La table des symboles locale.
  * @param ident Le nom de l'identificateur recherché.
@@ -93,6 +99,7 @@ Symbol* lookupSymbol(SymbolTable *globalSt, SymbolTable *localSt, char *ident);
 
 /**
  * @brief Détermine et renvoie le type de retour d'une expression donnée.
+ * 
  * @param exp Le noeud de l'expression à évaluer.
  * @param globalSt La table des symboles globale.
  * @param localSt La table des symboles locale.
@@ -102,6 +109,7 @@ SymbolDataType getExpType(Node *exp, SymbolTable *globalSt, SymbolTable *localSt
 
 /**
  * @brief Parcourt un bloc d'instructions pour vérifier les erreurs sémantiques (déclarations manquantes, types incompatibles).
+ * 
  * @param instrNode Le noeud contenant l'instruction à vérifier.
  * @param globalSt La table des symboles globale.
  * @param localSt La table des symboles locale.
@@ -111,6 +119,7 @@ void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *loca
 
 /**
  * @brief Point d'entrée de l'analyse sémantique. Parcourt l'arbre pour lancer les vérifications sur les fonctions et instructions.
+ * 
  * @param root Le noeud racine de l'arbre.
  * @param globalSt La table des symboles globale complète.
  * @return int Le nombre total d'erreurs sémantiques rencontrées (0 si le code est sémantiquement correct).

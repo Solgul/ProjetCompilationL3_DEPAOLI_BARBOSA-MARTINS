@@ -47,6 +47,7 @@ typedef struct Node {
 
 /**
  * @brief Alloue et initialise un nouveau noeud pour l'arbre.
+ * 
  * @param label L'étiquette (de type label_t) définissant le type du noeud (Prog, DeclVars, Ident, etc.).
  * @return Node* Un pointeur vers le noeud nouvellement créé.
  */
@@ -54,14 +55,16 @@ Node *makeNode(label_t label);
 
 /**
  * @brief Ajoute un noeud frère à la fin de la liste des frères du noeud courant.
+ * 
  * @param node Le noeud de départ.
  * @param sibling Le noeud frère à ajouter.
  */
 void addSibling(Node *node, Node *sibling);
 
 /**
- * @brief Ajoute un noeud enfant à un noeud parent. 
- * Si le parent a déjà des enfants, le nouvel enfant est ajouté comme frère du dernier enfant.
+ * @brief Ajoute un noeud enfant à un noeud parent.
+ * (Si le parent a déjà des enfants, le nouvel enfant est ajouté comme frère du dernier enfant.)
+ * 
  * @param parent Le noeud parent auquel ajouter l'enfant.
  * @param child Le noeud enfant à ajouter.
  */
@@ -75,6 +78,7 @@ void deleteTree(Node*node);
 
 /**
  * @brief Affiche l'arbre syntaxique abstrait sur la sortie standard.
+ * 
  * @param node Le noeud racine de l'arbre à afficher.
  */
 void printTree(Node *node);
