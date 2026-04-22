@@ -101,10 +101,10 @@ void processFunction(Node *declFonctNode, SymbolTable *globalSt) {
 /* ========================================================================= */
 SymbolTable* buildSymbolTable(Node *root) {
     SymbolTable *globalSt = createSymbolTable();
-    addSymbol(globalSt, "putchar", TYPE_VOID, SYM_PREDEF, 0);
-    addSymbol(globalSt, "putint", TYPE_VOID, SYM_PREDEF, 0);
-    addSymbol(globalSt, "getchar", TYPE_CHAR, SYM_PREDEF, 0);
-    addSymbol(globalSt, "getint", TYPE_INT, SYM_PREDEF, 0);
+    // addSymbol(globalSt, "putchar", TYPE_VOID, SYM_PREDEF, 0);
+    // addSymbol(globalSt, "putint", TYPE_VOID, SYM_PREDEF, 0);
+    // addSymbol(globalSt, "getchar", TYPE_CHAR, SYM_PREDEF, 0);
+    // addSymbol(globalSt, "getint", TYPE_INT, SYM_PREDEF, 0);
     if (!root) return globalSt;
     for (Node *child = root->firstChild; child != NULL; child = child->nextSibling) {
         if (child->label == Type || child->label == Struct) {
@@ -210,6 +210,10 @@ void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *loca
         }
     }
     if (instrNode->label == Affect) {
+        if(instrNode->firstChild->label == Dot) {//du type struct.nom_var = qqc
+            Node * structVar = instrNode->firstChild;
+            //jsp comment tester si la var est du bon type
+        }
         char *varName = instrNode->ident;
         Symbol *sLhs = lookupSymbol(globalSt, localSt, varName);
         if (!sLhs) {
