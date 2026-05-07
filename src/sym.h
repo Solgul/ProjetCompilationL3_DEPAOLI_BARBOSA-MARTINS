@@ -17,7 +17,6 @@ typedef enum {
     SYM_VAR,     // Variable
     SYM_FUNC,    // Fonction
     SYM_PARAM,   // Paramètre
-    SYM_PREDEF   // Fonction prédéfinie (non redéfinissable)
 } SymbolType;
 
 typedef struct StructInfo {
