@@ -1,8 +1,13 @@
 CC = gcc
 CFLAGS = -Wall -g -Iobj -Isrc
+LDFLAGS = -nostartfiles -no-pie
 
 YACC = bison
 LEX = flex
+
+EXEC_ASM = _anonymous
+NASM = nasm
+ASFLAGS = -f elf64 -g
 
 PARSER = parser
 LEXER = lexer
@@ -48,6 +53,11 @@ $(OBJ)/$(LEXER).c : $(SOURCE)/$(LEXER).lex $(OBJ)/$(PARSER).h
 $(OBJ)/$(PARSER).c $(OBJ)/$(PARSER).h &: $(SOURCE)/$(PARSER).y
 	$(YACC) -d -o $(OBJ)/$(PARSER).c $<
 
+asm : $(ASM)/$(EXEC_ASM).o
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+%.o : %.asm
+	$(NASM) $(ASFLAGS) -o $@ $<
 
 clean:
 	rm -fr $(OBJ)
