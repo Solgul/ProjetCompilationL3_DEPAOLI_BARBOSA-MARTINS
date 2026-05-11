@@ -4,7 +4,7 @@
 #include "tree.h"
 extern int lineno;
 
-static const char *StringFromLabel[] = {
+const char *StringFromLabel[] = {
     "Prog", 
     "DeclVars", 
     "DeclFonct", 

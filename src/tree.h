@@ -86,5 +86,6 @@ void printTree(Node *node);
 #define FIRSTCHILD(node) node->firstChild
 #define SECONDCHILD(node) node->firstChild->nextSibling
 #define THIRDCHILD(node) node->firstChild->nextSibling->nextSibling
+extern const char *StringFromLabel[];
 
 #endif /* TREE_H */

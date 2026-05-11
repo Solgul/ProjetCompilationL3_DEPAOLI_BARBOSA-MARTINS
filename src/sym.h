@@ -17,6 +17,7 @@ typedef enum {
     SYM_VAR,     // Variable
     SYM_FUNC,    // Fonction
     SYM_PARAM,   // Paramètre
+    SYM_PREDEF   // Fonction prédéfinie (putchar, getint...)
 } SymbolType;
 
 typedef struct StructInfo {
@@ -33,7 +34,8 @@ typedef struct Symbol {
     int isStatic; // 1 if static, 0 if not
     char* identFunc; // identifiant de la fonction d'origine
     StructInfo * nameStruct; 
-    struct SymbolTable * child; 
+    struct SymbolTable * child;
+    int offset;
 } Symbol;
 
 typedef struct SymbolTable {
