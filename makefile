@@ -63,3 +63,7 @@ clean:
 	rm -fr $(OBJ)
 	rm -fr $(BINARY)
 	rm -fr $(ASM)
+
+test: all
+	chmod +x script.sh
+	./script.sh || true

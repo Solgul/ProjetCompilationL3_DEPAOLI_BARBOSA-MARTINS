@@ -2,10 +2,12 @@
 
 # Couleurs pour la lecture
 GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+ORANGE='\033[0;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-EXEC="./bin/tpcas"
+EXEC="./bin/tpcc"
 TOTAL=0
 PASSED=0
 
@@ -18,7 +20,7 @@ fi
 echo "--- Début des tests du projet TPC ---"
 
 # 1. Test des fichiers VALIDES (doivent renvoyer 0)
-echo -e "\n[+] Test des fichiers syntaxiquement corrects (Attendu: 0)"
+echo -e "\n[+] Test des fichiers ${GREEN}syntaxiquement et sémantiquement corrects${NC} (Attendu: 0)"
 for f in test/good/*.tpc; do
     [ -e "$f" ] || continue
     ((TOTAL++))
@@ -32,8 +34,38 @@ for f in test/good/*.tpc; do
     fi
 done
 
-# 2. Test des fichiers INVALIDES (doivent renvoyer 1)
-echo -e "\n[-] Test des fichiers avec erreurs (Attendu: 1)"
+#2. Test des fichiers avec des WARNINGS (doivent renvoyer 0)
+echo -e "\n[-] Test des fichiers ${YELLOW}avec des warnings (Attendu : 0)${NC}"
+for f in test/warn/*.tpc; do
+    [ -e "$f" ] || continue
+    ((TOTAL++))
+    $EXEC < "$f" > /dev/null 2>&1
+    RET=$?
+    if [ $RET -eq 0 ]; then
+        echo -e "  $f : ${GREEN}PASS${NC}"
+        ((PASSED++))
+    else
+        echo -e "  $f : ${RED}FAIL (Code $RET au lieu de 0)${NC}"
+    fi
+done
+
+#3. Test des fichiers avec ERREUR SEMANTIQUE (doivent renvoyer 2)
+echo -e "\n[-] Test des fichiers avec ${ORANGE}des erreurs sémantique${NC} (Attendu : 2)"
+for f in test/sem-err/*.tpc; do
+    [ -e "$f" ] || continue
+    ((TOTAL++))
+    $EXEC < "$f" > /dev/null 2>&1
+    RET=$?
+    if [ $RET -eq 2 ]; then
+        echo -e "  $f : ${GREEN}PASS${NC}"
+        ((PASSED++))
+    else
+        echo -e "  $f : ${RED}FAIL (Code $RET au lieu de 2)${NC}"
+    fi
+done
+
+# 4. Test des fichiers INVALIDES (doivent renvoyer 1)
+echo -e "\n[-] Test des fichiers avec ${RED}des erreurs lexicale/syntaxique${NC} (Attendu: 1)"
 for f in test/syn-err/*.tpc; do
     [ -e "$f" ] || continue
     ((TOTAL++))
