@@ -67,7 +67,7 @@ int main(int argc, char **argv){
     int opt_status = handle_opt(argc, argv);
     if(opt_status == 1) return 0;
     if(opt_status == 2) return 3;
-    int res = yyparse();
+    int res = yyparse(); //lance le parser
     if (res == 0 && root != NULL) {
         if (print_tree_flag) {
             printTree(root);

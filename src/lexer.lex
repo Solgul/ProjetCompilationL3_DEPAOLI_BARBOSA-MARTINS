@@ -25,10 +25,11 @@ int colno = 1;
         /* ===================== */
         /* COMMENTAIRES          */
         /* ===================== */
-"//".* ;
+"//".*                   ;
 "/*"                     BEGIN(COMM);
 <COMM>"*/"               BEGIN(INITIAL);
-<COMM>.|\n               ;
+<COMM>\n                 {lineno++; colno = 1;}
+<COMM>.                  ;
 
         /* ===================== */
         /* MOTS-CLÉS             */

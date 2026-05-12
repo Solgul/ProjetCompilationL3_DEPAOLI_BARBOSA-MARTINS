@@ -215,7 +215,7 @@ void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *loca
             fprintf(stderr, "Erreur sémantique ligne %d : L'identificateur '%s' n'est pas déclaré.\n", instrNode->lineno, instrNode->ident);
             (*semErrors)++;
         }
-    }
+    } 
     if (instrNode->label == Affect) {
         Node *lhs = instrNode->firstChild;
         Node *rhs = lhs->nextSibling;
@@ -226,6 +226,7 @@ void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *loca
             fprintf(stderr, "Erreur sémantique ligne %d : Problème sur la partie gauche de l'affectation.\n", instrNode->lineno);
             (*semErrors)++;
         } else if (tRhs == TYPE_WRONG) {
+            fprintf(stderr, "Erreur sémantique ligne %d : Problème sur la partie droite de l'affectation.\n", instrNode->lineno);
             (*semErrors)++;
         } else if (tLhs == TYPE_CHAR && tRhs == TYPE_INT) {
             fprintf(stderr, "Avertissement ligne %d : affectation d'une valeur 'int' à une variable 'char'.\n", instrNode->lineno);
