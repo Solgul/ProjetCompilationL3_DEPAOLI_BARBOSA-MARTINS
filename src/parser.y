@@ -242,12 +242,7 @@ SuiteInstr:
 Instr:
     IdentAffect '=' Exp ';' {
         $$ = makeNode(Affect);
-        if ($1->label == Ident) {
-            $$->ident = $1->ident;
-            free($1);
-        } else {
-            addChild($$, $1);
-        }
+        addChild($$, $1);
         addChild($$, $3);
     }
     | IF '(' Exp ')' Instr %prec LOWER_THAN_ELSE {
