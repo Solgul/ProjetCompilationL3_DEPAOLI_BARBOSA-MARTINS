@@ -17,7 +17,7 @@ SOURCE = src
 TEST = test
 OBJ = obj
 ASM = asm
-EXEC = $(BINARY)/tpcas
+EXEC = $(BINARY)/tpcc
 
 all : clean create $(EXEC)
 
