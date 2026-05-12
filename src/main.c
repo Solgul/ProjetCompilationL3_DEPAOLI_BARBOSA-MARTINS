@@ -18,8 +18,8 @@ void print_help(const char *exeName) {
     printf("Usage: %s [OPTIONS] [FILE.tpc]\n", exeName);
     printf("Options:\n");
     printf("  -t, --tree       Affiche l'arbre abstrait sur la sortie standard\n");
-    printf("  -s, --symtabs    Affiche la table des symboles sur la sortie standard\n");
     printf("  -h, --help       Affiche cette aide et quitte\n");
+    printf("  -s, --symtabs    Affiche la table des symboles sur la sortie standard\n");
     printf("\n");
 }
 

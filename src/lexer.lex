@@ -81,5 +81,6 @@ int colno = 1;
         /* ===================== */
 . {
     fprintf(stderr, "Erreur lexicale ligne %d, colonne %d : caractère invalide '%s'\n", lineno, colno, yytext);
+    return 1;
 }
 %%
