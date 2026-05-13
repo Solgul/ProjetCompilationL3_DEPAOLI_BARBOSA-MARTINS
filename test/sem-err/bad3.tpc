@@ -1,0 +1,9 @@
+void func1(int a, char b) {
+    return;
+}
+
+int main(void) {
+    /* Mauvais types d'arguments (warnings) */
+    func1('a', 5);    /* Warning: types inversés */
+    return 0;
+}
