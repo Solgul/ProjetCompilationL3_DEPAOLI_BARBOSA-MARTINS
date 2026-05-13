@@ -64,7 +64,6 @@ void processDeclVars(Node *declVarsNode, SymbolTable *st, SymbolType use) {
     }
 }
 
-
 void processFunction(Node *declFonctNode, SymbolTable *globalSt) {
     Node *enTete = declFonctNode->firstChild;
     Node *typeNode = enTete->firstChild;
@@ -95,10 +94,6 @@ void processFunction(Node *declFonctNode, SymbolTable *globalSt) {
 
 SymbolTable* buildSymbolTable(Node *root) {
     SymbolTable *globalSt = createSymbolTable();
-    addSymbol(globalSt, "putchar", TYPE_VOID, SYM_PREDEF, 0);
-    addSymbol(globalSt, "putint", TYPE_VOID, SYM_PREDEF, 0);
-    addSymbol(globalSt, "getchar", TYPE_CHAR, SYM_PREDEF, 0);
-    addSymbol(globalSt, "getint", TYPE_INT, SYM_PREDEF, 0);
     if (!root) return globalSt;
     for (Node *child = root->firstChild; child != NULL; child = child->nextSibling) {
         if (child->label == Type || child->label == Struct) {
@@ -163,11 +158,10 @@ Symbol* lookupSymbol(SymbolTable *globalSt, SymbolTable *localSt, char *ident) {
 
 SymbolDataType getExpType(Node *exp, SymbolTable *globalSt, SymbolTable *localSt) {
     if (!exp) return TYPE_WRONG;
-    
     switch (exp->label) {
-        case Num:
+        case Num: 
             return TYPE_INT;
-        case Char:
+        case Char: 
             return TYPE_CHAR;
         case Ident: {
             Symbol *s = lookupSymbol(globalSt, localSt, exp->ident);
@@ -179,29 +173,28 @@ SymbolDataType getExpType(Node *exp, SymbolTable *globalSt, SymbolTable *localSt
             if (s && (s->use == SYM_FUNC || s->use == SYM_PREDEF)) return s->type;
             return TYPE_WRONG;
         }
+        case Addsub:
+        case Divstar:
+        case Equal:
+        case Order:
+        case And:
+        case Or:
+            return TYPE_INT; 
+            
         case Dot: {
-            Node *varNode = exp->firstChild;
-            Node *fieldNode = varNode->nextSibling;
-            if (varNode && fieldNode) {
-                Symbol *s = lookupSymbol(globalSt, localSt, varNode->ident);
-                if (s && s->type == TYPE_STRUCT && s->nameStruct != NULL) {
-                    for(int i = 0; i < s->nameStruct->nbChamp; i++) {
-                        if(strcmp(s->nameStruct->champs[i].ident, fieldNode->ident) == 0) {
-                            return s->nameStruct->champs[i].type;
-                        }
+            Node *base = exp->firstChild;
+            Node *champ = base->nextSibling;
+            Symbol *sBase = lookupSymbol(globalSt, localSt, base->ident);
+            
+            if (sBase && sBase->nameStruct) {
+                for (int i = 0; i < sBase->nameStruct->nbChamp; i++) {
+                    if (strcmp(sBase->nameStruct->champs[i].ident, champ->ident) == 0) {
+                        return sBase->nameStruct->champs[i].type;
                     }
                 }
             }
             return TYPE_WRONG;
         }
-        case Addsub:
-        case Divstar:
-        case UnOperator:
-        case Equal:
-        case Order:
-        case And:
-        case Or:
-            return TYPE_INT;
         default:
             return TYPE_WRONG;
     }
@@ -215,21 +208,55 @@ void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *loca
             fprintf(stderr, "Erreur sémantique ligne %d : L'identificateur '%s' n'est pas déclaré.\n", instrNode->lineno, instrNode->ident);
             (*semErrors)++;
         }
-    } 
+    }
+    if (instrNode->label == Return) {
+        SymbolDataType expectedType = TYPE_VOID; 
+        for (int i = 0; i < globalSt->nbSymbolInList; i++) {
+            if (globalSt->symbolList[i].child == localSt) {
+                expectedType = globalSt->symbolList[i].type;
+                break;
+            }
+        }
+        SymbolDataType actualType = TYPE_VOID;
+        if (instrNode->firstChild) {
+            actualType = getExpType(instrNode->firstChild, globalSt, localSt);
+        }
+        if (expectedType != actualType && actualType != TYPE_WRONG) {
+            fprintf(stderr, "Erreur sémantique ligne %d : Le type de retour ne correspond pas au type de la fonction.\n", instrNode->lineno);
+            (*semErrors)++;
+        }
+    }
     if (instrNode->label == Affect) {
-        Node *lhs = instrNode->firstChild;
-        Node *rhs = lhs->nextSibling;
-        SymbolDataType tLhs = getExpType(lhs, globalSt, localSt);
-        SymbolDataType tRhs = getExpType(rhs, globalSt, localSt);
-
-        if (tLhs == TYPE_WRONG) {
-            fprintf(stderr, "Erreur sémantique ligne %d : Problème sur la partie gauche de l'affectation.\n", instrNode->lineno);
-            (*semErrors)++;
-        } else if (tRhs == TYPE_WRONG) {
-            fprintf(stderr, "Erreur sémantique ligne %d : Problème sur la partie droite de l'affectation.\n", instrNode->lineno);
-            (*semErrors)++;
-        } else if (tLhs == TYPE_CHAR && tRhs == TYPE_INT) {
-            fprintf(stderr, "Avertissement ligne %d : affectation d'une valeur 'int' à une variable 'char'.\n", instrNode->lineno);
+        Node *lvalue = instrNode->firstChild;
+        Node *expr = lvalue->nextSibling;
+        SymbolDataType tLhs = TYPE_WRONG;
+        if (lvalue->label == Ident) {
+            Symbol *s = lookupSymbol(globalSt, localSt, lvalue->ident);
+            if (!s) {
+                fprintf(stderr, "Erreur sémantique ligne %d : Variable '%s' non déclarée.\n", instrNode->lineno, lvalue->ident);
+                (*semErrors)++;
+            } else {
+                tLhs = s->type;
+            }
+        } else if (lvalue->label == Dot) {
+            Node *base = lvalue->firstChild;
+            Node *champ = base->nextSibling;
+            Symbol *sBase = lookupSymbol(globalSt, localSt, base->ident);
+            if (!sBase) {
+                fprintf(stderr, "Erreur sémantique ligne %d : Structure '%s' non déclarée.\n", instrNode->lineno, base->ident);
+                (*semErrors)++;
+            } else {
+                tLhs = getExpType(lvalue, globalSt, localSt);
+                if (tLhs == TYPE_WRONG) {
+                    fprintf(stderr, "Erreur sémantique ligne %d : Le champ '%s' n'existe pas dans la structure '%s'.\n", 
+                            instrNode->lineno, champ->ident, base->ident);
+                    (*semErrors)++;
+                }
+            }
+        }
+        SymbolDataType tRhs = getExpType(expr, globalSt, localSt);
+        if (tLhs == TYPE_CHAR && tRhs == TYPE_INT) {
+            fprintf(stderr, "Avertissement ligne %d : Affectation d'une valeur 'int' à une variable 'char' (risque de perte de données).\n", instrNode->lineno);
         }
     }
     if (instrNode->label == Funct) {
@@ -237,6 +264,22 @@ void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *loca
         if (!s) {
             fprintf(stderr, "Erreur sémantique ligne %d : La fonction '%s' n'est pas déclarée.\n", instrNode->lineno, instrNode->ident);
             (*semErrors)++;
+        } else if (s->use == SYM_FUNC) {
+            int argCount = 0;
+            for (Node *arg = instrNode->firstChild; arg != NULL; arg = arg->nextSibling) {
+                argCount++;
+            }
+            int paramCount = 0;
+            if (s->child) {
+                for (int i = 0; i < s->child->nbSymbolInList; i++) {
+                    if (s->child->symbolList[i].use == SYM_PARAM) paramCount++;
+                }
+            }
+            if (argCount != paramCount) {
+                fprintf(stderr, "Erreur sémantique ligne %d : L'appel à la fonction '%s' fournit %d argument(s), mais %d sont attendus.\n", 
+                        instrNode->lineno, instrNode->ident, argCount, paramCount);
+                (*semErrors)++;
+            }
         }
     }
     for (Node *child = instrNode->firstChild; child != NULL; child = child->nextSibling) {
@@ -247,7 +290,11 @@ void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *loca
 int checkSemantics(Node *root, SymbolTable *globalSt) {
     int semErrors = 0;
     if (!root) return 0;
-    
+    int hasMain = findSymbol(globalSt, "main");
+    if (hasMain == -1) {
+        fprintf(stderr, "Erreur sémantique : La fonction principale 'main' est introuvable.\n");
+        semErrors++;
+    }
     for (Node *child = root->firstChild; child != NULL; child = child->nextSibling) {
         if (child->label == DeclFonct) {
             Node *enTete = child->firstChild;
@@ -265,4 +312,28 @@ int checkSemantics(Node *root, SymbolTable *globalSt) {
         }
     }
     return semErrors;
+}
+
+void computeOffsets(SymbolTable *st) {
+    if (!st) return;
+    int current_offset = 0;
+    
+    for (int i = 0; i < st->nbSymbolInList; i++) {
+        if (st->symbolList[i].use == SYM_VAR || st->symbolList[i].use == SYM_PARAM) {
+            if (st->symbolList[i].type == TYPE_STRUCT && st->symbolList[i].nameStruct) {
+                current_offset += 8 * st->symbolList[i].nameStruct->nbChamp;
+            } else {
+                current_offset += 8;
+            }
+            st->symbolList[i].offset = current_offset; 
+        }
+    }
+}
+
+void addPredefinedFunctions(SymbolTable *globalSt) {
+    if (!globalSt) return;
+    addSymbol(globalSt, "putchar", TYPE_VOID, SYM_PREDEF, 0);
+    addSymbol(globalSt, "putint", TYPE_VOID, SYM_PREDEF, 0);
+    addSymbol(globalSt, "getchar", TYPE_CHAR, SYM_PREDEF, 0);
+    addSymbol(globalSt, "getint", TYPE_INT, SYM_PREDEF, 0);
 }

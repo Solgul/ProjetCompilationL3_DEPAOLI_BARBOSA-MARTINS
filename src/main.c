@@ -67,12 +67,13 @@ int main(int argc, char **argv){
     int opt_status = handle_opt(argc, argv);
     if(opt_status == 1) return 0;
     if(opt_status == 2) return 3;
-    int res = yyparse(); //lance le parser
+    int res = yyparse();
     if (res == 0 && root != NULL) {
         if (print_tree_flag) {
             printTree(root);
         }
         SymbolTable *globalTable = buildSymbolTable(root);
+        addPredefinedFunctions(globalTable);
         if (print_symtabs_flag){
             printf("\n=== TABLE DES SYMBOLES GLOBALE ===\n");
             printSymbolTable(globalTable, 0); 
@@ -81,8 +82,7 @@ int main(int argc, char **argv){
         if (semErrors > 0) {
             res = 2;
         }
-        char *out_filename = "asm/_anonymous.asm";
-        char temp_filename[512];
+        char out_filename[512];
         if (input_filename != NULL) {
             char *base_name = strrchr(input_filename, '/');
             if (base_name != NULL) {
@@ -90,23 +90,25 @@ int main(int argc, char **argv){
             } else {
                 base_name = input_filename;
             }
-            snprintf(temp_filename, 512, "asm/%s", base_name);
-            char *dot = strrchr(temp_filename, '.');
+            snprintf(out_filename, sizeof(out_filename), "asm/%s", base_name);
+            char *dot = strrchr(out_filename, '.');
             if (dot != NULL && strcmp(dot, ".tpc") == 0) {
                 strcpy(dot, ".asm");
             } else {
-                strcat(temp_filename, ".asm");
+                strcat(out_filename, ".asm");
             }
-            out_filename = temp_filename;
+        } else {
+            strcpy(out_filename, "asm/out.asm");
         }
-        FILE * file = fopen(out_filename, "w+");
+        FILE *file = fopen(out_filename, "w");
         if (!file) {
-            fprintf(stderr, "Erreur : Impossible de créer le fichier %s\n", out_filename);
+            fprintf(stderr, "Erreur : Impossible de créer le fichier %s (vérifie si le dossier asm/ existe)\\n", out_filename);
             deleteTree(root);
-            return -1;
+            return 1;
         }
         parcours_depart(root, file, globalTable);
         fclose(file);
+        printf("Code assembleur généré dans : %s\\n", out_filename);
     }
     if(yyin != stdin){
         fclose(yyin);

@@ -127,4 +127,18 @@ void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *loca
  */
 int checkSemantics(Node *root, SymbolTable *globalSt);
 
+/**
+ * @brief met a jour les offset pour la table des symbole 
+ * 
+ * @param st 
+ */
+void computeOffsets(SymbolTable *st);
+
+/**
+ * @brief Ajoute les fonction predéfinis dans la table des symbole.
+ * 
+ * @param globalSt La table des symboles globale complète.
+ */
+void addPredefinedFunctions(SymbolTable *globalSt);
+
 #endif
