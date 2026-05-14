@@ -241,7 +241,7 @@ void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *loca
         } else if (lvalue->label == Dot) { // base.champ
             Node *base = lvalue->firstChild;
             Node *champ = base->nextSibling;
-            Symbol *sBase = lookupSymbol(globalSt, localSt, base->ident);
+            Symbol *sBase = lookupSymbol(globalSt, localSt, base->ident); 
             if (!sBase) {
                 fprintf(stderr, "Erreur sémantique ligne %d : Structure '%s' non déclarée.\n", instrNode->lineno, base->ident);
                 (*semErrors)++;
@@ -249,7 +249,7 @@ void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *loca
                 tLhs = getExpType(lvalue, globalSt, localSt);
                 if (tLhs == TYPE_WRONG) {
                     fprintf(stderr, "Erreur sémantique ligne %d : Le champ '%s' n'existe pas dans la structure '%s'.\n", 
-                            instrNode->lineno, champ->ident, sBase.);
+                            instrNode->lineno, champ->ident, sBase->nameStruct->name);
                     (*semErrors)++;
                 }
             }

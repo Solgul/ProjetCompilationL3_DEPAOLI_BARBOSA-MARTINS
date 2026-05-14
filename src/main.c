@@ -102,13 +102,13 @@ int main(int argc, char **argv){
         }
         FILE *file = fopen(out_filename, "w");
         if (!file) {
-            fprintf(stderr, "Erreur : Impossible de créer le fichier %s (vérifie si le dossier asm/ existe)\\n", out_filename);
+            fprintf(stderr, "Erreur : Impossible de créer le fichier %s (vérifie si le dossier asm/ existe)\n", out_filename);
             deleteTree(root);
             return 1;
         }
         parcours_depart(root, file, globalTable);
         fclose(file);
-        printf("Code assembleur généré dans : %s\\n", out_filename);
+        printf("Code assembleur généré dans : %s\n", out_filename);
     }
     if(yyin != stdin){
         fclose(yyin);
