@@ -108,7 +108,7 @@ int main(int argc, char **argv){
         }
         parcours_depart(root, file, globalTable);
         fclose(file);
-        printf("Code assembleur généré dans : %s\n", out_filename);
+        printf("Code assembleur généré dans : %s\n", out_filename); //?pas logique que ca marche meme si erreur semantique
     }
     if(yyin != stdin){
         fclose(yyin);

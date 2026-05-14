@@ -34,13 +34,16 @@ int addSymbol(SymbolTable *st, char *ident, SymbolDataType type, SymbolType use,
         fprintf(stderr, "Erreur sémantique ligne %d : L'identificateur '%s' est déjà déclaré dans cette portée.\n", lineno, ident);
         return 0;
     }
-    if (st->nbSymbolInList >= st->maxSymbolInList) {
+    if (st->nbSymbolInList >= st->maxSymbolInList) { //?faut pas planter mais l'aggrandir (comme dans le traceur de memoire)
         fprintf(stderr, "Erreur : La table des symboles est pleine.\n");
         exit(1);
     }
     Symbol *sym = &st->symbolList[st->nbSymbolInList];
     sym->ident = strdup(ident);
     sym->type = type;
+    if (type == TYPE_STRUCT){
+        
+    }
     sym->use = use;
     sym->lineno = lineno;
     sym->isStatic = 0;
@@ -61,6 +64,17 @@ void processDeclVars(Node *declVarsNode, SymbolTable *st, SymbolType use) {
                 }
             }
         }
+    }
+}
+
+void processDeclStruct(Node *declStructNode){
+    StructInfo info;
+    info.name = declStructNode->ident;
+    info.nbChamp = 0;
+    for (Node* child = declStructNode->firstChild; child->nextSibling != NULL; child = child->nextSibling){
+        Symbol sym;//creer le symbole
+        info.champs[info.nbChamp] = sym;
+        info.nbChamp ++;
     }
 }
 
@@ -249,7 +263,7 @@ void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *loca
                 tLhs = getExpType(lvalue, globalSt, localSt);
                 if (tLhs == TYPE_WRONG) {
                     fprintf(stderr, "Erreur sémantique ligne %d : Le champ '%s' n'existe pas dans la structure '%s'.\n", 
-                            instrNode->lineno, champ->ident, sBase->nameStruct->name);
+                            instrNode->lineno, champ->ident, sBase->ident);
                     (*semErrors)++;
                 }
             }

@@ -17,6 +17,7 @@ typedef enum {
     SYM_VAR,     // Variable
     SYM_FUNC,    // Fonction
     SYM_PARAM,   // Paramètre
+    SYM_STRUCT,
     SYM_PREDEF   // Fonction prédéfinie (putchar, getint...)
 } SymbolType;
 
