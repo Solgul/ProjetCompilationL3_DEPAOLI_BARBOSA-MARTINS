@@ -1,0 +1,9 @@
+# Forcer LF pour tous les fichiers texte
+* text=auto eol=lf
+
+# Fichiers shell : toujours LF, sans exception
+*.sh text eol=lf
+
+# Fichiers Windows qui ont légitimement besoin de CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf

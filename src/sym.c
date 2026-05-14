@@ -238,7 +238,7 @@ void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *loca
             } else {
                 tLhs = s->type;
             }
-        } else if (lvalue->label == Dot) {
+        } else if (lvalue->label == Dot) { // base.champ
             Node *base = lvalue->firstChild;
             Node *champ = base->nextSibling;
             Symbol *sBase = lookupSymbol(globalSt, localSt, base->ident);
@@ -249,7 +249,7 @@ void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *loca
                 tLhs = getExpType(lvalue, globalSt, localSt);
                 if (tLhs == TYPE_WRONG) {
                     fprintf(stderr, "Erreur sémantique ligne %d : Le champ '%s' n'existe pas dans la structure '%s'.\n", 
-                            instrNode->lineno, champ->ident, base->ident);
+                            instrNode->lineno, champ->ident, sBase.);
                     (*semErrors)++;
                 }
             }

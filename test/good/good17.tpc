@@ -1,6 +1,7 @@
 /* Test : Copie de structure et retour de structure */
 struct Vector {
-    int x, y;
+    int x;
+    int y;
 };
 
 struct Vector add(struct Vector v1, struct Vector v2) {
