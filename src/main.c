@@ -92,7 +92,7 @@ int main(int argc, char **argv){
                 base_name = input_filename;
             }
             (void)base_name;
-            snprintf(out_filename, sizeof(out_filename), "%s", input_filename);
+            snprintf(out_filename, sizeof(out_filename), "%s", input_filename);//?remplacer test/good/ par asm/
             char *dot = strrchr(out_filename, '.');
             if (dot != NULL && strcmp(dot, ".tpc") == 0) {
                 strcpy(dot, ".asm");
@@ -100,11 +100,11 @@ int main(int argc, char **argv){
                 strcat(out_filename, ".asm");
             }
         } else {
-            strcpy(out_filename, "_anonymous.asm");
+            strcpy(out_filename, "asm/_anonymous.asm");
         }
         FILE *file = fopen(out_filename, "w");
         if (!file) {
-            fprintf(stderr, "Erreur : impossible de créer le fichier %s\\n", out_filename);
+            fprintf(stderr, "Erreur : impossible de créer le fichier %s\n", out_filename);
             deleteTree(root);
             return 3;
         }

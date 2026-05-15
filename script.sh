@@ -10,6 +10,8 @@ NC='\033[0m' # No Color
 EXEC="./bin/tpcc"
 TOTAL=0
 PASSED=0
+SUBTOTAL=0
+SUBPASSED=0
 
 # Vérification de l'existence de l'exécutable
 if [ ! -f "$EXEC" ]; then
@@ -24,60 +26,88 @@ echo -e "\n[+] Test des fichiers ${GREEN}syntaxiquement et sémantiquement corre
 for f in test/good/*.tpc; do
     [ -e "$f" ] || continue
     ((TOTAL++))
+    ((SUBTOTAL++))
     $EXEC < "$f" > /dev/null 2>&1
     RET=$?
     if [ $RET -eq 0 ]; then
-        echo -e "  $f : ${GREEN}PASS${NC}"
         ((PASSED++))
+        ((SUBPASSED++))
     else
         echo -e "  $f : ${RED}FAIL (Code $RET au lieu de 0)${NC}"
     fi
 done
+
+if [ $SUBPASSED -eq $SUBTOTAL ]; then 
+    echo -e "${GREEN}[-] Tout les tests sont sont passés${NC}"
+fi
+((SUBTOTAL=0))
+((SUBPASSED=0))
 
 #2. Test des fichiers avec des WARNINGS (doivent renvoyer 0)
 echo -e "\n[-] Test des fichiers ${YELLOW}avec des warnings (Attendu : 0)${NC}"
 for f in test/warn/*.tpc; do
     [ -e "$f" ] || continue
     ((TOTAL++))
+    ((SUBTOTAL++))
     $EXEC < "$f" > /dev/null 2>&1
     RET=$?
     if [ $RET -eq 0 ]; then
-        echo -e "  $f : ${GREEN}PASS${NC}"
         ((PASSED++))
+        ((SUBPASSED++))
     else
         echo -e "  $f : ${RED}FAIL (Code $RET au lieu de 0)${NC}"
     fi
 done
+
+if [ $SUBPASSED -eq $SUBTOTAL ]; then 
+    echo -e "${GREEN}[-] Tout les tests sont sont passés${NC}"
+fi
+((SUBTOTAL=0))
+((SUBPASSED=0))
 
 #3. Test des fichiers avec ERREUR SEMANTIQUE (doivent renvoyer 2)
 echo -e "\n[-] Test des fichiers avec ${ORANGE}des erreurs sémantique${NC} (Attendu : 2)"
 for f in test/sem-err/*.tpc; do
     [ -e "$f" ] || continue
     ((TOTAL++))
+    ((SUBTOTAL++))
     $EXEC < "$f" > /dev/null 2>&1
     RET=$?
     if [ $RET -eq 2 ]; then
-        echo -e "  $f : ${GREEN}PASS${NC}"
         ((PASSED++))
+        ((SUBPASSED++))
     else
         echo -e "  $f : ${RED}FAIL (Code $RET au lieu de 2)${NC}"
     fi
 done
+
+if [ $SUBPASSED -eq $SUBTOTAL ]; then 
+    echo -e "${GREEN}[-] Tout les tests sont sont passés${NC}"
+fi
+((SUBTOTAL=0))
+((SUBPASSED=0))
 
 # 4. Test des fichiers INVALIDES (doivent renvoyer 1)
 echo -e "\n[-] Test des fichiers avec ${RED}des erreurs lexicale/syntaxique${NC} (Attendu: 1)"
 for f in test/syn-err/*.tpc; do
     [ -e "$f" ] || continue
     ((TOTAL++))
+    ((SUBTOTAL++))
     $EXEC < "$f" > /dev/null 2>&1
     RET=$?
     if [ $RET -eq 1 ]; then
-        echo -e "  $f : ${GREEN}PASS${NC}"
         ((PASSED++))
+        ((SUBPASSED++))
     else
         echo -e "  $f : ${RED}FAIL (Code $RET au lieu de 1)${NC}"
     fi
 done
+
+if [ $SUBPASSED -eq $SUBTOTAL ]; then 
+    echo -e "${GREEN}[-] Tout les tests sont sont passés${NC}"
+fi
+((SUBTOTAL=0))
+((SUBPASSED=0))
 
 # Résultat final
 echo -e "\n--------------------------------------"

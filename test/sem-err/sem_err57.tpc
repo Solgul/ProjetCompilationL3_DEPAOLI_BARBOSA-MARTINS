@@ -1,1 +1,5 @@
-struct s{int f;}; int main(void){ struct s x; return x.f(); }
+struct s{int f;};
+int main(void){
+    struct s x;
+    return x.f();
+}

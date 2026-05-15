@@ -54,10 +54,10 @@ $(OBJ)/$(PARSER).c $(OBJ)/$(PARSER).h &: $(SOURCE)/$(PARSER).y
 	$(YACC) -d -o $(OBJ)/$(PARSER).c $<
 
 asm : $(ASM)/$(EXEC_ASM).o
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $(ASM)/$(EXEC_ASM) $^ $(LDFLAGS)
 
 %.o : %.asm
-	$(NASM) $(ASFLAGS) -o $@ $<
+	$(NASM) $(ASFLAGS) -o $@ $< 
 
 clean:
 	rm -fr $(OBJ)

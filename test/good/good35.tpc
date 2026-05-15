@@ -1,4 +1,9 @@
 struct inner { int a; char c; };
 struct outer { struct inner in; int z; };
 struct outer o;
-int main(void){ o.in.a=5; o.in.c='A'; o.z=1; return o.in.a+o.in.c+o.z; }
+int main(void){ 
+    o.in.a=5;
+    o.in.c='A'; 
+    o.z=1; 
+    return o.in.a+o.in.c+o.z; 
+}

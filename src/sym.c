@@ -361,7 +361,7 @@ static Symbol *check_lvalue(Node *lhs, SymbolTable *globalSt, SymbolTable *local
         Node *field = base ? base->nextSibling : NULL;
         Symbol *baseSym = NULL;
         if (!base || base->label != Ident || !field || field->label != Ident) {
-            fprintf(stderr, "Erreur sémantique ligne %d : accès à un champ invalide.\n", lhs->lineno);
+            fprintf(stderr, "Erreur sémantique ligne %d : accès à un champ invalide.\n test : %d\n ident : %d\n dot : %d\n", lhs->lineno, base->label, Ident, Dot);
             (*semErrors)++;
             return NULL;
         }

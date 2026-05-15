@@ -1,1 +1,2 @@
-struct s{ void x; }; int main(void){ return 0; }
+struct s{ void x; };
+int main(void){ return 0; }

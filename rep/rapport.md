@@ -5,7 +5,7 @@ Rafael BARBOSA MARTINS
 
 Ugo DEPAOLI
 
-Groupe 3
+Groupe 8
 
 ## 1. Introduction
 L'objectif de ce projet est de réaliser un analyseur syntaxique pour le langage TPC (un sous-ensemble du C) en utilisant les outils Flex et Bison. Le programme doit être capable de vérifier la correction lexicale et syntaxique d'un fichier source et, en l'absence d'erreurs, de construire et d'afficher l'arbre syntaxique correspondant.
@@ -49,3 +49,8 @@ Exemple :
 - La plus grande difficultées de ce projet consistait dans la création des jeux de test, ce qui s'est avéré assez compliquer d'arrvier à atteindre un haut poucentages de jeux de test.
 
 - Et la 2ème plus grande diffilcultées fut de généré l'arbre nous avons mis du temps a regler toutes les erreurs de type "seg fault" ou bien "syntax error" quand on faisait sur un bon fichier.
+
+
+IA : debugage et test
+repartition 50-50
+difficultés : structure, fonction call, generation asm
