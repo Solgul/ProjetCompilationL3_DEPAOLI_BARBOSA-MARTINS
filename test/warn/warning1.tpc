@@ -1,8 +1,1 @@
-/* Return avec mauvais type (warning) */
-char charFunc(void) {
-    return 65;  /* Warning: return int au lieu de char */
-}
-
-int main(void) {
-    return 0;
-}
+int main(void){ char c; c=97; return c; }

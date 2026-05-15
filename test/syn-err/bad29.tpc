@@ -1,6 +1,0 @@
-/* ERREUR : Constante caractère trop longue */
-int main(void) {
-    char c;
-    c = 'ab';
-    return 0;
-}

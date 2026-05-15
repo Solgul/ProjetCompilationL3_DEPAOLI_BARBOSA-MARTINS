@@ -1,0 +1,1 @@
+int main(void){ struct missing x; return 0; }

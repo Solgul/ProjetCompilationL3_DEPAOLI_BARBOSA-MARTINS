@@ -1,12 +1,1 @@
-/* Test basique de structure */
-
-struct Point {
-    int x, y;
-};
-
-int main(void){
-    struct Point p1;
-    p1.x = 10;
-    p1.y = 20;
-    return p1.x;
-}
+int main(void){ int a,b,c,d,e; a=20; b=6; c=a+b*3-(a/b)+(a%b); d=-c; e=+d; return e; }

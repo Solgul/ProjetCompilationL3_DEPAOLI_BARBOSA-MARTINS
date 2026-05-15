@@ -1,0 +1,1 @@
+int main(void){ putint(123); return 0; }

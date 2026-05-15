@@ -83,6 +83,7 @@ void deleteTree(Node*node);
  */
 void printTree(Node *node);
 
+// variables utile
 #define FIRSTCHILD(node) node->firstChild
 #define SECONDCHILD(node) node->firstChild->nextSibling
 #define THIRDCHILD(node) node->firstChild->nextSibling->nextSibling

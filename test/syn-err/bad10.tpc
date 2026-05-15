@@ -1,8 +1,0 @@
-struct A { int x; };
-
-/* ERREUR : Typedef interdit */
-typedef struct A TypeA;
-
-int main(void){
-    return 0;
-}

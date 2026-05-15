@@ -1,0 +1,1 @@
+struct i{ char c; }; struct o{ struct i x; }; int main(void){ struct o y; y.x.c=300; return y.x.c; }

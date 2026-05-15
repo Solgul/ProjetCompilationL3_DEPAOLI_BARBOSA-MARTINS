@@ -1,0 +1,1 @@
+char f(char c){ return 999; } int main(void){ char c; c=1234; return f(5678); }

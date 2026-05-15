@@ -1,0 +1,1 @@
+int main(void){ char c; c='A'; putchar(c); return 0; }

@@ -1,0 +1,1 @@
+int one(void){return 1;} int two(void){return 2;} int main(void){ return one()+two()*one()-(two()/two()); }

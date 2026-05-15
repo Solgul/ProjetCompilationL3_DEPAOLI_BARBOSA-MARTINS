@@ -1,0 +1,1 @@
+int main(void){ char n,t,b,q; n='\n'; t='\t'; b='\\'; q='\''; return n+t+b+q; }

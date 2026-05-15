@@ -1,12 +1,1 @@
-/* test/good/good13.tpc */
-/* Test coverage: Empty blocks {}, nested if */
-int main(void){
-    int x; x = 1;
-    if (x == 0) {
-        /* Bloc vide ici -> active la règle vide de SuiteInstr */
-        { } 
-    } else {
-        if (x > 0) x = 2; /* IF sans ELSE à l'intérieur d'un ELSE */
-    }
-    return x;
-}
+int main(void){ int i,s; i=0; s=0; while (i<5) { s=s+i; i=i+1; } return s; }

@@ -1,7 +1,0 @@
-int main(void){
-    /* ERREUR : On ne peut pas déclarer 'p' ici */
-    struct Point {
-        int x, y;
-    } p; 
-    return 0;
-}

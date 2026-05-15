@@ -1,0 +1,1 @@
+int main(void){ struct s{int a;}; struct s{char b;}; return 0; }

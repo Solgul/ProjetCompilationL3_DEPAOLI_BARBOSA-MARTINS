@@ -73,14 +73,15 @@ int main(int argc, char **argv){
             printTree(root);
         }
         SymbolTable *globalTable = buildSymbolTable(root);
-        addPredefinedFunctions(globalTable);
         if (print_symtabs_flag){
             printf("\n=== TABLE DES SYMBOLES GLOBALE ===\n");
             printSymbolTable(globalTable, 0); 
         }
         int semErrors = checkSemantics(root, globalTable);
         if (semErrors > 0) {
-            res = 2;
+            deleteTree(root);
+            if(yyin != stdin) fclose(yyin);
+            return 2;
         }
         char out_filename[512];
         if (input_filename != NULL) {
@@ -90,7 +91,8 @@ int main(int argc, char **argv){
             } else {
                 base_name = input_filename;
             }
-            snprintf(out_filename, sizeof(out_filename), "asm/%s", base_name);
+            (void)base_name;
+            snprintf(out_filename, sizeof(out_filename), "%s", input_filename);
             char *dot = strrchr(out_filename, '.');
             if (dot != NULL && strcmp(dot, ".tpc") == 0) {
                 strcpy(dot, ".asm");
@@ -98,17 +100,16 @@ int main(int argc, char **argv){
                 strcat(out_filename, ".asm");
             }
         } else {
-            strcpy(out_filename, "asm/out.asm");
+            strcpy(out_filename, "_anonymous.asm");
         }
         FILE *file = fopen(out_filename, "w");
         if (!file) {
-            fprintf(stderr, "Erreur : Impossible de créer le fichier %s (vérifie si le dossier asm/ existe)\n", out_filename);
+            fprintf(stderr, "Erreur : impossible de créer le fichier %s\\n", out_filename);
             deleteTree(root);
-            return 1;
+            return 3;
         }
         parcours_depart(root, file, globalTable);
         fclose(file);
-        printf("Code assembleur généré dans : %s\n", out_filename); //?pas logique que ca marche meme si erreur semantique
     }
     if(yyin != stdin){
         fclose(yyin);

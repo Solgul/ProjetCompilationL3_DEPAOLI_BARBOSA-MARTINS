@@ -1,0 +1,1 @@
+struct a{int x;}; struct b{struct a y;}; int main(void){ struct b z; z.y=3; return 0; }

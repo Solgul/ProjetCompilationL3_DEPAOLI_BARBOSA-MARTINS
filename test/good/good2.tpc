@@ -1,0 +1,3 @@
+int g;
+char c;
+int main(void){ g=42; c='A'; return g; }

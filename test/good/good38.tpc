@@ -1,0 +1,1 @@
+int main(void){ struct loc { int x; }; struct loc l; l.x=9; return l.x; }

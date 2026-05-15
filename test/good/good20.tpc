@@ -1,21 +1,2 @@
-/* Test : Identifiants complexes et instruction vide */
-int _var_global;
-int var_2;
-
-int main(void) {
-    int _local;
-    int A_B_C;
-    
-    _local = 0;
-    A_B_C = 1;
-    
-    /* Instruction vide (juste un point-virgule) */
-    ;
-    ;
-    
-    if (_local == 0) {
-        ; /* Instruction vide dans un if */
-    }
-    
-    return 0;
-}
+int mix(char a,int b,char c){ return a+b+c; }
+int main(void){ return mix('A',1,'B'); }

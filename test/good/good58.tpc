@@ -1,0 +1,1 @@
+struct p{int x; int y;}; int main(void){ struct p a; struct p b; a.x=1; a.y=2; b.x=3; b.y=4; return (a.x+b.x)*(a.y+b.y); }

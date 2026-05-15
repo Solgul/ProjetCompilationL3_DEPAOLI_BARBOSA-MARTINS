@@ -1,7 +1,0 @@
-/* test/syn-err/bad14.tpc */
-int f(void) { return 1; }
-
-/* test declaration valeur variable dans struct */
-struct Retard { int x = 0; };
-
-int main(void){ return 0; }

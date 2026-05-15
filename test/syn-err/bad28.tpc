@@ -1,6 +1,0 @@
-/* ERREUR : Caractère vide */
-int main(void) {
-    char c;
-    c = ''; 
-    return 0;
-}

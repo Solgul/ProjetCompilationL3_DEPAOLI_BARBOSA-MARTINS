@@ -1,20 +1,2 @@
-/* Test : Arithmétique sur les char et comparaison */
-int main(void) {
-    char c;
-    int res;
-    
-    c = 'a';
-    /* 'b' vaut 'a' + 1 */
-    if (c + 1 == 'b') {
-        res = 1;
-    } else {
-        res = 0;
-    }
-    
-    /* Comparaison char et int */
-    if (c < 1000) {
-        res = res + 1;
-    }
-    
-    return res;
-}
+int sum6(int a,int b,int c,int d,int e,int f){ return a+b+c+d+e+f; }
+int main(void){ return sum6(1,2,3,4,5,6); }

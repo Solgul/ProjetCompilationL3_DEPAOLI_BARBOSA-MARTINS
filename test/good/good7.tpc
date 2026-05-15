@@ -1,13 +1,1 @@
-/* Test : Priorité du Modulo (%) par rapport à l'addition (+) */
-int main(void) {
-    int res;
-    
-    /* Doit être analysé comme 10 + (10 % 3) = 10 + 1 = 11 */
-    /* Si la priorité est mauvaise, ça fera (10 + 10) % 3 = 20 % 3 = 2 */
-    res = 10 + 10 % 3;
-    
-    if (res == 11) {
-        return 1;
-    }
-    return 0;
-}
+int main(void){ int a,b,r; a=3; b=4; r=(a<b)+(a<=b)+(a!=b)+(a==b)+(a>=b)+(a>b); return r; }

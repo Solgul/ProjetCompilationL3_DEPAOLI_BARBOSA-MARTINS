@@ -1,10 +1,1 @@
-/* Commentaire sur
-   plusieurs lignes */
-// Commentaire ligne fin
-int main(void) {
-    char c;
-    c = '\n';    /* Test de l'échappement \n [cite: 23] */
-    c = '\t';    /* Test de \t */
-    c = '\\';    /* Test de l'anti-slash */
-    return 0;
-}
+int main(void){ int a,b; a=0; b=0; if (a) if (b) a=1; else a=2; return a; }

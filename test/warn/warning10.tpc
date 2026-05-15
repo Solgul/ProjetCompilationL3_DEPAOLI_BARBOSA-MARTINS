@@ -1,0 +1,1 @@
+int main(void){ char c; int x; x=100; c=x*2+3; return c; }

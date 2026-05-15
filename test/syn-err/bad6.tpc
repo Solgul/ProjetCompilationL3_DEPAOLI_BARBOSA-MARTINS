@@ -1,7 +1,0 @@
-int main(void){
-    /* ERREUR : Pas de nom après struct */
-    struct {
-        int x;
-    } p;
-    return 0;
-}

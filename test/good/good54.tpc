@@ -1,0 +1,1 @@
+int f(char a,char b,int c,int d,char e,int f){ return a+b+c+d+e+f; } int main(void){ return f('a','b',1,2,'c',3); }

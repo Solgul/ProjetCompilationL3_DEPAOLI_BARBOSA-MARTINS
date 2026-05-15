@@ -1,0 +1,1 @@
+int main(void){ char c; c='ab'; return c; }

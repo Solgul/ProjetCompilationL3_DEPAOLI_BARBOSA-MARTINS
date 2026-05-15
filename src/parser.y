@@ -36,7 +36,7 @@ Node *root = NULL;
 %left DIVSTAR
 %nonassoc UMINUS NOT
 
-%type <node> Prog GlobalDecls GlobalDecl DeclStruct ListDeclVars DeclStarts DeclStart 
+%type <node> Prog GlobalDecls GlobalDecl DeclFoncts DeclStruct ListDeclVars DeclStarts DeclStart 
 %type <node> Type DeclVars Declarateurs DeclFonct EnTeteFonct Parametres ListTypVar 
 %type <node> Corps SuiteInstr IdentAffect Instr Exp TB FB M E T F Arguments ListExp
 
@@ -47,9 +47,10 @@ Node *root = NULL;
 /* ========================================================================= */
 
 Prog :
-    GlobalDecls {
+    GlobalDecls DeclFoncts {
         $$ = makeNode(Prog);
         if($1 != NULL) addChild($$, $1);
+        if($2 != NULL) addChild($$, $2);
         root = $$;
     }
 ;
@@ -71,6 +72,13 @@ GlobalDecls :
 GlobalDecl :
     DeclVars { $$ = $1; }
     | DeclStruct { $$ = $1; }
+;
+
+DeclFoncts :
+    DeclFoncts DeclFonct {
+        $$ = $1;
+        addSibling($$, $2);
+    }
     | DeclFonct { $$ = $1; }
 ;
 
@@ -88,16 +96,12 @@ DeclStruct:
 
 ListDeclVars:
     ListDeclVars DeclVars {
-        if ($1 == NULL) {
-            $$ = makeNode(DeclVars);
-            addChild($$, $2);
-        } else {
-            $$ = $1;
-            addChild($$, $2);
-        }
+        $$ = $1;
+        addChild($$, $2);
     }
-    |{
+    | DeclVars {
         $$ = makeNode(DeclVars);
+        addChild($$, $1);
     }
 ;
 

@@ -1,0 +1,1 @@
+int f(int x,char x){ return 0; } int main(void){ return f(1,'a'); }

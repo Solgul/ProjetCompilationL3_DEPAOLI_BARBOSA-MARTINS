@@ -1,10 +1,1 @@
-/* Déclaration locale de structure */
-int main(void){
-    struct Local {
-        char c;
-        int val;
-    };
-    struct Local l;
-    l.val = 1;
-    return l.val;
-}
+int main(void){ int a; a=0; if (1) a=7; return a; }

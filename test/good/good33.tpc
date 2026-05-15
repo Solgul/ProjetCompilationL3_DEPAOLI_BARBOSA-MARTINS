@@ -1,0 +1,3 @@
+struct pair { int a; char b; };
+struct pair p;
+int main(void){ p.a=10; p.b='c'; return p.a+p.b; }

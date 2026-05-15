@@ -1,21 +1,2 @@
-/* Test : If, Else et While SANS accolades */
-int main(void) {
-    int i; 
-    i = 0;
-    
-    /* While sur une seule ligne */
-    while (i < 10) i = i + 1;
-    
-    /* If/Else sans accolades */
-    if (i == 10) 
-        i = 0;
-    else
-        i = 1;
-
-    /* Imbrication sans accolades */
-    if (i == 0)
-        while (i < 5)
-            i = i + 1;
-            
-    return i;
-}
+int x;
+int main(void){ int x; x=5; return x; }

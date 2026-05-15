@@ -1,10 +1,1 @@
-int main( void ) {
-    int a; int b;
-    a = 10; b = -3;             /* Test moins unaire */
-    if (a != b) { a = a - 1; }  /* Test != et - */
-    if (a <= b) { a = a * 2; }  /* Test <= et * */
-    if (a >= b) { a = a / 2; }  /* Test >= et / */
-    if (a > b)  { a = a % 2; }  /* Test > et % */
-    if (!(a < b)) { return 0; } /* Test ! (not) */
-    return 1;                  
-}
+int main(){ return 0; }

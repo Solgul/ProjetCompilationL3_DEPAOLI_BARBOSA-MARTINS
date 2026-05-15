@@ -1,26 +1,3 @@
-/* Test : Copie de structure et retour de structure */
-struct Vector {
-    int x;
-    int y;
-};
-
-struct Vector add(struct Vector v1, struct Vector v2) {
-    struct Vector res;
-    res.x = v1.x + v2.x;
-    res.y = v1.y + v2.y;
-    return res;
-}
-
-int main(void) {
-    struct Vector a, b, c;
-    a.x = 10; a.y = 20;
-    b.x = 1;  b.y = 2;
-    
-    /* Copie de structure */
-    c = a; 
-    
-    /* Utilisation en paramètre et retour */
-    c = add(a, b);
-    
-    return c.x; /* Doit retourner 11 */
-}
+int g;
+void set(void){ g=9; return; }
+int main(void){ set(); return g; }

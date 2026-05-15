@@ -1,0 +1,1 @@
+struct s{int a;}; int f(void){ struct s x; return x; } int main(void){return f();}

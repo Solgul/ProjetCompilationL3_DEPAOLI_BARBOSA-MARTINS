@@ -1,0 +1,1 @@
+int main(void){ putchar('a','b'); return 0; }

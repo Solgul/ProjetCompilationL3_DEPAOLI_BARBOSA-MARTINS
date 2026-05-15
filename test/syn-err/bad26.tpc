@@ -1,8 +1,0 @@
-/* ERREUR : Fonction void qui retourne une valeur */
-void proc(void) {
-    return 10; /* Interdit */
-}
-
-int main(void) {
-    return 0;
-}

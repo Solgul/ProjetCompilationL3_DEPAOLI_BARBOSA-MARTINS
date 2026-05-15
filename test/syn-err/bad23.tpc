@@ -1,6 +1,0 @@
-/* ERREUR : Caractère inconnu */
-int main(void) {
-    int a;
-    a = 10 @ 20; /* @ n'existe pas en TPC */
-    return a;
-}

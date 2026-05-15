@@ -17,7 +17,6 @@ typedef enum {
     SYM_VAR,     // Variable
     SYM_FUNC,    // Fonction
     SYM_PARAM,   // Paramètre
-    SYM_STRUCT,
     SYM_PREDEF   // Fonction prédéfinie (putchar, getint...)
 } SymbolType;
 
@@ -129,9 +128,10 @@ void checkInstructions(Node *instrNode, SymbolTable *globalSt, SymbolTable *loca
 int checkSemantics(Node *root, SymbolTable *globalSt);
 
 /**
- * @brief met a jour les offset pour la table des symbole 
+ * @brief "Calcule les décalages (offsets) en octets par rapport au registre de base (rbp) 
+ * pour le positionnement des variables locales et paramètres dans la pile d'exécution
  * 
- * @param st 
+ * @param st La table des symboles
  */
 void computeOffsets(SymbolTable *st);
 

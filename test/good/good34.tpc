@@ -1,0 +1,2 @@
+struct box { int x; int y; };
+int main(void){ struct box b; b.x=2; b.y=3; return b.x*b.y; }
