@@ -52,6 +52,18 @@ Exemple :
 
 (si un h est rentré, l'aide sera affiché et tout le reste ignoré)
 
+### 3.b Fonctionnalités du Makefile
+
+make : pour créer l'exécutable
+
+make clean : pour retirer les fichiers asm/, bin/ et obj/
+
+make test : pour créer l'exécutable et lancer tout les tests pour voir les résultats attendus
+
+make asm : pour créer l'exécutable correspondant au fichier _anonymous.asm
+
+make [NOM_FICHIER_ASSEMBLEUR].o : pour créer le fichier exécutable correspondant au ficheir [NOM_FICHIER_ASSEMBLEUR].asm
+
 ## 4. Difficultés : 
 
 - L'une des plus grande difficultés de ce projet était de gérer les structures, soit dans le parser, ou dans la vérification sémantique
