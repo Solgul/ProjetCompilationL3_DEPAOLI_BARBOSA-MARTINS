@@ -62,7 +62,7 @@ make test : pour créer l'exécutable et lancer tout les tests pour voir les ré
 
 make asm : pour créer l'exécutable correspondant au fichier _anonymous.asm
 
-make [NOM_FICHIER_ASSEMBLEUR].o : pour créer le fichier exécutable correspondant au ficheir [NOM_FICHIER_ASSEMBLEUR].asm
+make asm-all : pour créer le fichier exécutable correspondant au ficheirs .asm présent dans asm/
 
 ## 4. Difficultés : 
 
@@ -72,4 +72,6 @@ make [NOM_FICHIER_ASSEMBLEUR].o : pour créer le fichier exécutable corresponda
 
 ## 5. Utilisaion de l'Inteligence Artificielle
 
-L'IA à été utilisé principalement pour la création des banc de test (qui ont été verifié après) et quelque débugage lorsqu'on ne comprennait pas les erreurs qui nous étaient retournées
+L'IA à été utilisé principalement pour la création des banc de test (qui ont été verifié après) et quelque débugage lorsqu'on ne comprennait pas les erreurs qui nous étaient retournée 
+
+Nous avons aussi utilisé l'IA pour des fonctionnalités du makefile (pour la commande [make asm-all])

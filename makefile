@@ -19,6 +19,12 @@ OBJ = obj
 ASM = asm
 EXEC = $(BINARY)/tpcc
 
+# Récupère tous les .asm dans asm/
+ASM_SOURCES = $(wildcard $(ASM)/*.asm)
+
+# Génère les noms d'exécutables correspondants (asm/foo.asm -> asm/foo)
+ASM_EXECS = $(ASM_SOURCES:.asm=)
+
 all : clean create $(EXEC)
 
 create : 
@@ -56,8 +62,13 @@ $(OBJ)/$(PARSER).c $(OBJ)/$(PARSER).h &: $(SOURCE)/$(PARSER).y
 asm : $(ASM)/$(EXEC_ASM).o
 	$(CC) -o $(ASM)/$(EXEC_ASM) $^ $(LDFLAGS)
 
-%.o : %.asm
-	$(NASM) $(ASFLAGS) -o $@ $< 
+asm-all: $(ASM_EXECS)
+
+$(ASM)/% : $(ASM)/%.o
+	$(CC) -o $@ $< $(LDFLAGS)
+
+$(ASM)/%.o : $(ASM)/%.asm
+	$(NASM) $(ASFLAGS) -o $@ $<
 
 clean:
 	rm -fr $(OBJ)
