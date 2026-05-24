@@ -91,8 +91,7 @@ int main(int argc, char **argv){
             } else {
                 base_name = input_filename;
             }
-            (void)base_name;
-            snprintf(out_filename, sizeof(out_filename), "%s", input_filename);//?remplacer test/good/ par asm/
+            snprintf(out_filename, sizeof(out_filename), "asm/%s", base_name);
             char *dot = strrchr(out_filename, '.');
             if (dot != NULL && strcmp(dot, ".tpc") == 0) {
                 strcpy(dot, ".asm");
